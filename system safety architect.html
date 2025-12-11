@@ -25,10 +25,8 @@
 </head>
 <body>
 
-    <!-- APP CONTAINER -->
     <div id="app" class="w-screen h-screen flex flex-col overflow-hidden text-slate-800">
         
-        <!-- TOOLBAR -->
         <div class="h-14 bg-white border-b border-slate-200 flex items-center px-4 justify-between z-20 shadow-sm shrink-0">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold">SA</div>
@@ -44,6 +42,13 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                     Link Nodes
                 </button>
+                
+                <button onclick="document.getElementById('file-input').click()" class="flex items-center gap-1 px-3 py-1.5 rounded hover:bg-white hover:shadow-sm text-sm font-medium transition-all text-slate-700">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Import
+                </button>
+                <input type="file" id="file-input" class="hidden" accept=".json" onchange="window.app.importData(this)">
+
                 <button onclick="window.app.exportData()" class="flex items-center gap-1 px-3 py-1.5 rounded hover:bg-white hover:shadow-sm text-sm font-medium transition-all">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Export
@@ -51,18 +56,13 @@
             </div>
         </div>
 
-        <!-- WORKSPACE -->
         <div class="flex-1 relative flex overflow-hidden">
             
-            <!-- CANVAS AREA -->
             <div id="canvas-container" class="flex-1 relative cursor-grab active:cursor-grabbing canvas-grid overflow-hidden">
-                <!-- PANNING LAYER -->
                 <div id="pan-layer" class="absolute top-0 left-0 w-full h-full transform origin-top-left will-change-transform" style="transform: translate(0px, 0px);">
                     
-                    <!-- LINKS LAYER (SVG) -->
                     <svg id="svg-layer" class="absolute top-0 left-0 overflow-visible pointer-events-none" width="4000" height="4000">
                         <defs>
-                            <!-- Markers -->
                             <marker id="arrowhead-neutral" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                                 <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
                             </marker>
@@ -76,25 +76,20 @@
                                 <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb" />
                             </marker>
                         </defs>
-                        <!-- Paths injected by JS -->
-                    </svg>
+                        </svg>
 
-                    <!-- TIER LABELS -->
                     <div class="absolute -left-20 top-20 text-4xl font-black text-slate-200 select-none pointer-events-none -rotate-90 origin-right">TIER 5</div>
                     <div class="absolute -left-20 top-80 text-4xl font-black text-slate-200 select-none pointer-events-none -rotate-90 origin-right">TIER 4</div>
                     <div class="absolute -left-20 top-[450px] text-4xl font-black text-slate-200 select-none pointer-events-none -rotate-90 origin-right">TIER 3</div>
                     <div class="absolute -left-20 top-[600px] text-4xl font-black text-slate-200 select-none pointer-events-none -rotate-90 origin-right">TIER 2</div>
                     <div class="absolute -left-20 top-[750px] text-4xl font-black text-slate-200 select-none pointer-events-none -rotate-90 origin-right">TIER 1</div>
 
-                    <!-- NODES LAYER -->
                     <div id="nodes-layer" class="absolute top-0 left-0 w-full h-full">
-                        <!-- Nodes injected by JS -->
-                    </div>
+                        </div>
 
                 </div>
             </div>
 
-            <!-- PROPERTIES PANEL -->
             <div id="properties-panel" class="hidden w-80 bg-white border-l border-slate-200 shadow-xl p-4 flex flex-col gap-4 z-30 overflow-y-auto">
                 <div class="flex justify-between items-center pb-2 border-b border-slate-100">
                     <h2 id="prop-title" class="font-bold text-slate-700">Edit</h2>
@@ -103,14 +98,11 @@
                     </button>
                 </div>
                 <div id="prop-content" class="flex flex-col gap-4 pb-20">
-                    <!-- Injected by JS -->
+                    </div>
                 </div>
-                <!-- Delete Node Button (Fixed at bottom if needed, but included in prop-content for scrolling) -->
-            </div>
 
         </div>
 
-        <!-- LEGEND -->
         <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur border border-slate-200 p-3 rounded-lg shadow-lg text-xs z-20 pointer-events-none">
             <h3 class="font-bold mb-2">Evidence Key</h3>
             <div class="flex flex-col gap-1">
@@ -139,7 +131,6 @@
 
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
         class SafetyApp {
             constructor() {
@@ -693,6 +684,34 @@
                 document.body.appendChild(downloadAnchorNode);
                 downloadAnchorNode.click();
                 downloadAnchorNode.remove();
+            }
+
+            // --- IMPORT FUNCTION ---
+            importData(inputElement) {
+                const file = inputElement.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.nodes && data.links) {
+                            this.nodes = data.nodes;
+                            this.links = data.links;
+                            this.deselectAll(); 
+                            this.renderAll();
+                            alert('Import successful!');
+                        } else {
+                            alert('Invalid file format. JSON must contain nodes and links arrays.');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Error parsing JSON file.');
+                    }
+                    // Reset input so same file can be selected again
+                    inputElement.value = '';
+                };
+                reader.readAsText(file);
             }
 
             // --- Helpers ---

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PALS Guidelines Quiz</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- React Code Starts Here ---
+        
+        const { useState, useEffect } = React;
+
+        // --- Helper Components ---
+
+        // Icon for correct answer
+        const CheckIcon = () => (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+        );
+
+        // Icon for incorrect answer
+        const XIcon = () => (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        );
+
+        // --- Quiz Data ---
+        // Questions based on current AHA PALS guidelines.
+        const quizQuestions = [
+            {
+                question: "For two-rescuer CPR on a 7-year-old child, what is the correct compression-to-ventilation ratio?",
+                options: ["30:2", "15:2", "30:1", "15:1"],
+                correctAnswerIndex: 1,
+                explanation: "The compression-to-ventilation ratio for two-rescuer CPR in children and infants is 15:2. For single-rescuer CPR, the ratio is 30:2, the same as for adults."
+            },
+            {
+                question: "What is the initial recommended energy dose for defibrillation of ventricular fibrillation (VF) in a pediatric patient?",
+                options: ["1 J/kg", "2 J/kg", "4 J/kg", "0.5 J/kg"],
+                correctAnswerIndex: 1,
+                explanation: "The initial recommended dose for defibrillation is 2 J/kg. Subsequent shocks can be increased, typically to 4 J/kg, and then up to a maximum of 10 J/kg or the adult dose."
+            },
+            {
+                question: "A 4-year-old presents with symptomatic bradycardia (heart rate 50/min) with a pulse but poor perfusion despite effective oxygenation and ventilation. What is the first-line medication to administer?",
+                options: ["Atropine", "Amiodarone", "Epinephrine", "Calcium Chloride"],
+                correctAnswerIndex: 2,
+                explanation: "For symptomatic bradycardia (HR < 60/min with poor perfusion) that persists despite adequate ventilation and oxygenation, Epinephrine is the primary medication. The IV/IO dose is 0.01 mg/kg."
+            },
+            {
+                question: "What is the correct compression depth for CPR in an infant?",
+                options: ["About 1 inch (2.5 cm)", "About 1.5 inches (4 cm)", "About 2 inches (5 cm)", "About 2.4 inches (6 cm)"],
+                correctAnswerIndex: 1,
+                explanation: "For infants, the chest should be compressed to a depth of about 1.5 inches (4 cm), which is approximately one-third of the anteroposterior diameter of the chest."
+            },
+            {
+                question: "During a pediatric resuscitation, how often should the rhythm be checked if the patient has an organized rhythm but no pulse (PEA)?",
+                options: ["Every 1 minute", "Every 2 minutes", "Every 5 minutes", "Only after ROSC"],
+                correctAnswerIndex: 1,
+                explanation: "Rhythm checks should be performed every 2 minutes during CPR, which corresponds to the end of a CPR cycle. This minimizes interruptions in chest compressions."
+            },
+            {
+                question: "What is the recommended IV/IO dose of Amiodarone for pulseless VT or VF in a pediatric patient?",
+                options: ["1 mg/kg bolus", "2.5 mg/kg bolus", "5 mg/kg bolus", "10 mg/kg bolus"],
+                correctAnswerIndex: 2,
+                explanation: "For refractory/shock-resistant VF or pulseless VT, a 5 mg/kg bolus of Amiodarone can be administered. This may be repeated up to two times for a total of 15 mg/kg."
+            },
+            {
+                question: "Which of the following is a key element of post-cardiac arrest care in children?",
+                options: ["Inducing hypothermia to 30°C", "Targeted Temperature Management (TTM)", "Administering prophylactic antibiotics", "Maintaining PaCO2 below 30 mmHg"],
+                correctAnswerIndex: 1,
+                explanation: "Targeted Temperature Management (TTM) is a critical component of post-ROSC care. The goal is to maintain a core temperature between 32°C and 36°C for at least 24 hours to improve neurological outcomes."
+            },
+            {
+                question: "You are treating a child with septic shock. After initial stabilization, what is the recommended initial fluid bolus?",
+                options: ["5 ml/kg over 60 minutes", "10-20 ml/kg over 5-10 minutes", "25 ml/kg over 30 minutes", "30 ml/kg over 1 hour"],
+                correctAnswerIndex: 1,
+                explanation: "For septic shock, an initial isotonic crystalloid fluid bolus of 10-20 ml/kg should be administered rapidly over 5-10 minutes. This can be repeated based on the patient's response, watching for signs of fluid overload."
+            },
+            {
+                question: "When using a cuffed endotracheal tube (ETT) for a child, what is the best way to ensure proper cuff inflation pressure?",
+                options: ["Inflate with 10 mL of air", "Inflate until you hear no air leak at all", "Use a manometer to maintain pressure at <20-25 cm H2O", "Inflate until you feel resistance on the pilot balloon"],
+                correctAnswerIndex: 2,
+                explanation: "To avoid tracheal ischemia, cuff pressure should be monitored with a manometer and kept at the lowest level that allows for a minimal leak, typically less than 20-25 cm H2O."
+            },
+            {
+                question: "Which of the following is considered a 'reversible cause' of cardiac arrest represented by the 'H's' in the 'H's and T's' mnemonic?",
+                options: ["Tension Pneumothorax", "Tamponade (Cardiac)", "Toxins", "Hypovolemia"],
+                correctAnswerIndex: 3,
+                explanation: "Hypovolemia is one of the 'H's. The H's include: Hypovolemia, Hypoxia, Hydrogen ion (acidosis), Hypo/Hyperkalemia, and Hypothermia. The T's include: Tension pneumothorax, Tamponade, Toxins, and Thrombosis (pulmonary or coronary)."
+            }
+        ];
+
+
+        // --- Main App Component ---
+
+        function App() {
+            const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+            const [score, setScore] = useState(0);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+            const [isAnswered, setIsAnswered] = useState(false);
+            const [showResults, setShowResults] = useState(false);
+
+            const handleAnswerSelect = (optionIndex) => {
+                if (isAnswered) return; // Prevent changing answer
+
+                setSelectedAnswer(optionIndex);
+                setIsAnswered(true);
+
+                if (optionIndex === quizQuestions[currentQuestionIndex].correctAnswerIndex) {
+                    setScore(prevScore => prevScore + 1);
+                }
+            };
+
+            const handleNextQuestion = () => {
+                if (currentQuestionIndex < quizQuestions.length - 1) {
+                    setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+                    setSelectedAnswer(null);
+                    setIsAnswered(false);
+                } else {
+                    setShowResults(true);
+                }
+            };
+
+            const handleRestartQuiz = () => {
+                setCurrentQuestionIndex(0);
+                setScore(0);
+                setSelectedAnswer(null);
+                setIsAnswered(false);
+                setShowResults(false);
+            };
+
+            const getButtonClass = (optionIndex) => {
+                if (!isAnswered) {
+                    return "bg-white hover:bg-blue-100 text-blue-800";
+                }
+
+                const isCorrect = optionIndex === quizQuestions[currentQuestionIndex].correctAnswerIndex;
+                const isSelected = optionIndex === selectedAnswer;
+
+                if (isCorrect) {
+                    return "bg-green-200 text-green-800 border-green-500";
+                }
+                if (isSelected && !isCorrect) {
+                    return "bg-red-200 text-red-800 border-red-500";
+                }
+                return "bg-white text-blue-800";
+            };
+
+            if (showResults) {
+                const resultPercentage = Math.round((score / quizQuestions.length) * 100);
+                return (
+                    <div className="bg-gray-100 min-h-screen flex items-center justify-center font-sans p-4">
+                        <div className="w-full max-w-2xl bg-white rounded-xl shadow-2xl p-8 text-center">
+                            <h2 className="text-3xl font-bold text-gray-800 mb-2">Quiz Completed!</h2>
+                            <p className="text-xl text-gray-600 mb-6">Your Final Score</p>
+                            <div className={`w-32 h-32 rounded-full mx-auto flex items-center justify-center text-3xl font-bold mb-6 ${resultPercentage >= 80 ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                {score} / {quizQuestions.length}
+                            </div>
+                            <p className="text-2xl font-semibold text-gray-700 mb-8">({resultPercentage}%)</p>
+                            <button
+                                onClick={handleRestartQuiz}
+                                className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 ease-in-out transform hover:scale-105"
+                            >
+                                Restart Quiz
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+
+            return (
+                <div className="bg-gray-100 min-h-screen flex items-center justify-center font-sans p-4">
+                    <div className="w-full max-w-2xl bg-white rounded-xl shadow-2xl p-6 md:p-8">
+                        {/* Header */}
+                        <div className="mb-6">
+                            <p className="text-blue-600 font-semibold text-sm">PALS Knowledge Assessment</p>
+                            <h1 className="text-xl md:text-2xl font-bold text-gray-800 mt-1">
+                                Question {currentQuestionIndex + 1}
+                                <span className="text-base font-normal text-gray-500">/{quizQuestions

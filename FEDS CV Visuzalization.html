@@ -1841,10 +1841,10 @@
                 if (data.name === 'Unknown') {
                     warnings.push(
                         '⚠️ Author name not detected. ' +
-                        'This often happens when the RTF was opened and re-saved by Microsoft Word, ' +
-                        'which replaces the standard \\ul0 underline-off marker with \\ulnone. ' +
-                        'If you see this, try saving the file from Word as "Rich Text Format (*.rtf)" ' +
-                        'or use the original RTF without re-opening in Word.'
+                        'The parser looks for the name as underlined text after "Curriculum Vitae" in the RTF header. ' +
+                        'Check that your file: (1) contains the text "Curriculum Vitae", and ' +
+                        '(2) has the author name formatted with RTF underline markup. ' +
+                        'If the name still does not appear, the file may use an unexpected header layout.'
                     );
                 }
 
@@ -1861,10 +1861,10 @@
                 if (totalPubs === 0) {
                     warnings.push(
                         '⚠️ No publications or abstracts were found in the uploaded file. ' +
-                        'Possible causes: (1) The RTF was edited in Microsoft Word, which changes internal ' +
-                        'formatting markers that the parser relies on. (2) The file does not follow the ' +
-                        'expected UPenn CV section naming (e.g., "Research Publications, Peer Reviewed"). ' +
-                        '(3) The numbered list items use a different indent format than expected (\\fi-<n>). ' +
+                        'Possible causes: (1) The file does not follow the expected UPenn CV section naming ' +
+                        '(e.g., "Research Publications, Peer Reviewed"). ' +
+                        '(2) Section headers are not formatted with RTF underline markup. ' +
+                        '(3) The numbered list items are missing or use an unexpected format. ' +
                         'Try uploading the original, unmodified RTF from the UPenn CV template.'
                     );
                 } else if (data.peerReviewed.length === 0 && totalPubs > 0) {

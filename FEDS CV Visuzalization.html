@@ -237,6 +237,19 @@
             font-size: 0.82rem;
             margin-top: 12px;
             display: none;
+            text-align: left;
+            white-space: pre-wrap;
+            background: #fff5f5;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            line-height: 1.6;
+        }
+
+        .error-msg.warning {
+            color: #92400e;
+            background: #fffbeb;
+            border-color: #fcd34d;
         }
 
         .error-msg.visible {
@@ -910,9 +923,10 @@
         }
 
         // Identify section boundaries by underlined headers
+        // Supports both \ul0 (original RTF) and \ulnone (Microsoft Word RTF)
         function findSections(raw) {
-            // Pattern: \ul SECTION_TITLE\ul0  (with possible RTF noise in between)
-            const headerRe = /\\ul\s+([\s\S]*?)\\ul0/g;
+            // \ul followed by non-alphanumeric (avoids matching \ulnone, \uld, etc.)
+            const headerRe = /\\ul(?![a-zA-Z0-9])([\s\S]*?)(?:\\ul0|\\ulnone)/g;
             const sections = [];
             let m;
             while ((m = headerRe.exec(raw)) !== null) {
@@ -924,9 +938,9 @@
             return sections;
         }
 
-        // Extract numbered items (pattern: \fi-720 N. ... \cell)
+        // Extract numbered items — accepts any \fi-<n> value (Word may differ from -720)
         function extractNumberedItems(sectionContent) {
-            const re = /\\fi-720\s+(\d+)\.\s+([\s\S]*?)\\cell/g;
+            const re = /\\fi-\d+\s+(\d+)\.\s+([\s\S]*?)\\cell/g;
             const items = [];
             let m;
             while ((m = re.exec(sectionContent)) !== null) {
@@ -936,8 +950,9 @@
         }
 
         // Extract journal name (underlined text within a publication entry)
+        // Supports both \ul0 (original RTF) and \ulnone (Microsoft Word RTF)
         function extractJournal(rawText) {
-            const re = /\\ul\s+([\s\S]*?)\\ul0/;
+            const re = /\\ul(?![a-zA-Z0-9])([\s\S]*?)(?:\\ul0|\\ulnone)/;
             const m = rawText.match(re);
             if (m) return stripRTF(m[1]).trim();
             return '';
@@ -998,12 +1013,13 @@
         }
 
         // Detect name from RTF header
+        // Supports both \ul0 (original RTF) and \ulnone (Microsoft Word RTF)
         function detectName(raw) {
             // After "Curriculum Vitae", find all underlined sections and pick the one that is a name
             const cvIdx = raw.search(/Curriculum Vitae/i);
             if (cvIdx < 0) return 'Unknown';
             const after = raw.substring(cvIdx, cvIdx + 2000);
-            const re = /\\ul\s+([\s\S]*?)\\ul0/g;
+            const re = /\\ul(?![a-zA-Z0-9])([\s\S]*?)(?:\\ul0|\\ulnone)/g;
             let m;
             while ((m = re.exec(after)) !== null) {
                 let text = stripRTF(m[1]).trim().replace(/\s+/g, ' ');
@@ -1773,7 +1789,10 @@
                     document.getElementById('btn-generate').disabled = false;
                     hideError();
                 };
-                reader.readAsText(file, 'utf-8');
+                // RTF files from Microsoft Word use Windows-1252 (ANSI) encoding.
+                // Reading as latin1 gives a 1-to-1 byte mapping; RTF's \\'xx hex escapes
+                // handle all non-ASCII characters so this is safe for all RTF sources.
+                reader.readAsText(file, 'windows-1252');
             }
         }
 
@@ -1815,6 +1834,52 @@
             try {
                 const facYear = parseInt(document.getElementById('faculty-year').value) || 2023;
                 const data = parseRTF(uploadedCVs[selectedCVIndex].content, facYear);
+
+                // ---- Post-parse diagnostics ----
+                const warnings = [];
+
+                if (data.name === 'Unknown') {
+                    warnings.push(
+                        '⚠️ Author name not detected. ' +
+                        'The parser looks for the name as underlined text after "Curriculum Vitae" in the RTF header. ' +
+                        'Check that your file: (1) contains the text "Curriculum Vitae", and ' +
+                        '(2) has the author name formatted with RTF underline markup. ' +
+                        'If the name still does not appear, the file may use an unexpected header layout.'
+                    );
+                }
+
+                const totalPubs = (
+                    data.peerReviewed.length +
+                    data.peerReviewedReviews.length +
+                    data.nonPeerReviewed.length +
+                    data.contributionsCited.length +
+                    data.editorials.length +
+                    data.abstracts.length +
+                    data.altMedia.length
+                );
+
+                if (totalPubs === 0) {
+                    warnings.push(
+                        '⚠️ No publications or abstracts were found in the uploaded file. ' +
+                        'Possible causes: (1) The file does not follow the expected UPenn CV section naming ' +
+                        '(e.g., "Research Publications, Peer Reviewed"). ' +
+                        '(2) Section headers are not formatted with RTF underline markup. ' +
+                        '(3) The numbered list items are missing or use an unexpected format. ' +
+                        'Try uploading the original, unmodified RTF from the UPenn CV template.'
+                    );
+                } else if (data.peerReviewed.length === 0 && totalPubs > 0) {
+                    warnings.push(
+                        'ℹ️ No peer-reviewed publications were detected, but other content was found. ' +
+                        'Check that the section is titled exactly "Research Publications, Peer Reviewed".'
+                    );
+                }
+
+                if (warnings.length > 0) {
+                    showError(warnings.join('\n\n'), true);
+                } else {
+                    hideError();
+                }
+
                 renderDashboard(data);
             } catch (err) {
                 showError('Error parsing RTF: ' + err.message);
@@ -1833,14 +1898,16 @@
             document.getElementById('upload-view').style.display = 'flex';
         }
 
-        function showError(msg) {
+        function showError(msg, isWarning = false) {
             const el = document.getElementById('error-msg');
             el.textContent = msg;
+            el.classList.toggle('warning', isWarning);
             el.classList.add('visible');
         }
 
         function hideError() {
-            document.getElementById('error-msg').classList.remove('visible');
+            const el = document.getElementById('error-msg');
+            el.classList.remove('visible', 'warning');
         }
 
         // Chart.js defaults

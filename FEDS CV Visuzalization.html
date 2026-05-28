@@ -12,12 +12,10 @@
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
-        /* ===== DESIGN TOKENS ===== */
         :root {
             --bg-page: #f4f6fb;
             --bg-card: #ffffff;
             --bg-card-alt: #f8fafc;
-            --bg-upload: #eef2ff;
             --accent: #2563eb;
             --accent-light: #3b82f6;
             --accent-lighter: #dbeafe;
@@ -27,10 +25,9 @@
             --text-muted: #94a3b8;
             --text-on-accent: #ffffff;
             --border: #e2e8f0;
-            --border-focus: #93c5fd;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, .07);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, .1);
             --color-first: #059669;
             --color-first-bg: #d1fae5;
             --color-middle: #d97706;
@@ -43,13 +40,13 @@
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
-            --radius-xl: 20px;
+            --radius-xl: 20px
         }
 
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         body {
@@ -57,95 +54,98 @@
             background: var(--bg-page);
             color: var(--text-primary);
             min-height: 100vh;
-            line-height: 1.5;
+            line-height: 1.5
         }
 
-        /* ===== UPLOAD VIEW ===== */
         #upload-view {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 24px;
+            padding: 24px
         }
 
         .upload-container {
             background: var(--bg-card);
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-lg);
-            max-width: 560px;
+            max-width: 640px;
             width: 100%;
-            padding: 48px 40px;
-            text-align: center;
+            padding: 46px 40px;
+            text-align: center
         }
 
         .upload-container h1 {
             font-size: 1.75rem;
             font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 8px
         }
 
-        .upload-container .subtitle {
+        .subtitle {
             color: var(--text-secondary);
-            font-size: 0.92rem;
-            margin-bottom: 32px;
+            font-size: .92rem;
+            margin-bottom: 28px
         }
 
         .dropzone {
             border: 2px dashed var(--border);
             border-radius: var(--radius-lg);
-            padding: 40px 24px;
+            padding: 38px 24px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all .2s;
             background: var(--bg-card-alt);
-            margin-bottom: 24px;
-            position: relative;
+            margin-bottom: 22px;
+            position: relative
         }
 
         .dropzone:hover,
         .dropzone.dragover {
             border-color: var(--accent);
-            background: var(--accent-lighter);
+            background: var(--accent-lighter)
         }
 
         .dropzone svg {
             width: 48px;
             height: 48px;
             color: var(--accent);
-            margin-bottom: 12px;
+            margin-bottom: 12px
         }
 
         .dropzone h3 {
             font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
+            font-weight: 700;
+            margin-bottom: 4px
         }
 
         .dropzone p {
-            font-size: 0.82rem;
-            color: var(--text-muted);
+            font-size: .82rem;
+            color: var(--text-muted)
         }
 
-        .dropzone input[type="file"] {
+        .dropzone input[type=file] {
             position: absolute;
             inset: 0;
             opacity: 0;
-            cursor: pointer;
+            cursor: pointer
+        }
+
+        .settings-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 22px
         }
 
         .settings-group {
-            text-align: left;
-            margin-bottom: 24px;
+            text-align: left
         }
 
         .settings-group label {
             display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
+            font-size: .82rem;
+            font-weight: 700;
             color: var(--text-secondary);
-            margin-bottom: 6px;
+            margin-bottom: 6px
         }
 
         .settings-group input {
@@ -153,22 +153,15 @@
             padding: 10px 14px;
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            font-size: 0.9rem;
+            font-size: .9rem;
             font-family: inherit;
-            color: var(--text-primary);
-            transition: border-color 0.2s;
+            color: var(--text-primary)
         }
 
-        .settings-group input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .settings-group .help-text {
-            font-size: 0.72rem;
+        .help-text {
+            font-size: .72rem;
             color: var(--text-muted);
-            margin-top: 4px;
+            margin-top: 4px
         }
 
         .btn {
@@ -177,64 +170,49 @@
             justify-content: center;
             padding: 12px 28px;
             border-radius: var(--radius-sm);
-            font-size: 0.88rem;
-            font-weight: 600;
+            font-size: .88rem;
+            font-weight: 700;
             font-family: inherit;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all .2s;
             border: none;
-            gap: 8px;
+            gap: 8px
         }
 
         .btn-primary {
             background: var(--accent);
-            color: var(--text-on-accent);
+            color: var(--text-on-accent)
         }
 
         .btn-primary:hover {
             background: var(--accent-dark);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-md)
         }
 
         .btn-primary:disabled {
             background: var(--text-muted);
-            cursor: not-allowed;
+            cursor: not-allowed
         }
 
         .btn-secondary {
             background: var(--bg-card-alt);
             color: var(--text-secondary);
-            border: 1px solid var(--border);
+            border: 1px solid var(--border)
         }
 
         .btn-secondary:hover {
-            background: var(--border);
+            background: var(--border)
         }
 
         .upload-actions {
             display: flex;
             gap: 12px;
-            justify-content: center;
-        }
-
-        .file-name-badge {
-            display: none;
-            padding: 6px 14px;
-            background: var(--color-first-bg);
-            color: var(--color-first);
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .file-name-badge.visible {
-            display: inline-block;
+            justify-content: center
         }
 
         .error-msg {
             color: var(--color-award);
-            font-size: 0.82rem;
+            font-size: .82rem;
             margin-top: 12px;
             display: none;
             text-align: left;
@@ -243,67 +221,118 @@
             border: 1px solid #fecaca;
             border-radius: var(--radius-sm);
             padding: 10px 14px;
-            line-height: 1.6;
+            line-height: 1.6
         }
 
         .error-msg.warning {
             color: #92400e;
             background: #fffbeb;
-            border-color: #fcd34d;
+            border-color: #fcd34d
         }
 
         .error-msg.visible {
-            display: block;
+            display: block
         }
 
-        /* ===== DASHBOARD VIEW ===== */
+        .cv-selector-area {
+            margin-bottom: 20px;
+            text-align: left
+        }
+
+        .cv-selector-area h4 {
+            font-size: .84rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px
+        }
+
+        .cv-file-list {
+            list-style: none;
+            padding: 0
+        }
+
+        .cv-file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 6px;
+            font-size: .82rem;
+            cursor: pointer;
+            transition: all .15s
+        }
+
+        .cv-file-item:hover {
+            border-color: var(--accent);
+            background: var(--accent-lighter)
+        }
+
+        .cv-file-item.selected {
+            border-color: var(--accent);
+            background: var(--accent-lighter);
+            font-weight: 700
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 4px
+        }
+
+        .remove-btn:hover {
+            color: var(--color-award)
+        }
+
         #dashboard-view {
             display: none;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 24px
         }
 
-        /* Header */
         .dash-header {
             text-align: center;
             padding: 32px 20px 24px;
-            margin-bottom: 24px;
+            margin-bottom: 24px
         }
 
         .dash-header h1 {
             font-size: 2rem;
             font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 4px;
+            margin-bottom: 4px
         }
 
         .dash-header .subtitle {
-            font-size: 0.92rem;
+            font-size: .92rem;
             color: var(--text-secondary);
+            margin-bottom: 0
         }
 
-        .dash-header .institution {
-            font-size: 0.8rem;
+        .institution {
+            font-size: .8rem;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-top: 2px
         }
 
         .header-actions {
-            margin-top: 16px;
+            margin-top: 16px
         }
 
         .btn-upload-new {
             padding: 8px 18px;
-            font-size: 0.78rem;
+            font-size: .78rem
         }
 
-        /* Stat Cards */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 16px;
-            margin-bottom: 28px;
+            margin-bottom: 28px
         }
 
         .stat-card {
@@ -313,117 +342,110 @@
             padding: 20px 16px;
             text-align: center;
             box-shadow: var(--shadow-sm);
-            transition: all 0.2s;
+            transition: all .2s
         }
 
         .stat-card:hover {
             box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
+            transform: translateY(-2px)
         }
 
         .stat-number {
             font-size: 2.2rem;
-            font-weight: 800;
-            line-height: 1.1;
+            font-weight: 900;
+            line-height: 1.1
         }
 
         .stat-label {
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: .7rem;
+            font-weight: 800;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            margin-top: 4px;
+            letter-spacing: .06em;
+            margin-top: 4px
         }
 
         .stat-card:nth-child(1) .stat-number {
-            color: var(--accent);
+            color: var(--accent)
         }
 
         .stat-card:nth-child(2) .stat-number {
-            color: var(--color-first);
+            color: var(--color-first)
         }
 
         .stat-card:nth-child(3) .stat-number {
-            color: var(--color-middle);
+            color: var(--color-middle)
         }
 
         .stat-card:nth-child(4) .stat-number {
-            color: var(--color-lecture);
+            color: var(--color-lecture)
         }
 
         .stat-card:nth-child(5) .stat-number {
-            color: var(--color-award);
+            color: var(--color-award)
         }
 
         .stat-card:nth-child(6) .stat-number {
-            color: var(--color-last);
+            color: var(--color-last)
         }
 
-        /* Cards */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-sm)
         }
 
         .card-title {
             font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            font-weight: 800;
             margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 8px
         }
 
-        .card-title .emoji {
-            font-size: 1.1rem;
-        }
-
-        /* Layout */
         .two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 20px
         }
 
-        @media (max-width: 900px) {
-            .two-col {
-                grid-template-columns: 1fr;
+        @media(max-width:900px) {
+
+            .two-col,
+            .settings-row {
+                grid-template-columns: 1fr
             }
 
             .stats-row {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(3, 1fr)
             }
         }
 
-        @media (max-width: 600px) {
+        @media(max-width:600px) {
             .stats-row {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr)
             }
 
             #dashboard-view {
-                padding: 12px;
+                padding: 12px
             }
         }
 
-        /* Chart */
         .chart-wrap {
             position: relative;
             width: 100%;
-            height: 340px;
+            height: 340px
         }
 
-        /* Filter / Tab buttons */
         .filter-bar {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-bottom: 14px;
+            margin-bottom: 14px
         }
 
         .filter-btn,
@@ -434,18 +456,18 @@
             border: 1px solid var(--border);
             background: var(--bg-card);
             color: var(--text-secondary);
-            font-size: 0.78rem;
-            font-weight: 600;
+            font-size: .78rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.15s;
-            font-family: inherit;
+            transition: all .15s;
+            font-family: inherit
         }
 
         .filter-btn:hover,
         .tab-btn:hover,
         .year-btn:hover {
             border-color: var(--accent);
-            color: var(--accent);
+            color: var(--accent)
         }
 
         .filter-btn.active,
@@ -453,22 +475,21 @@
         .year-btn.active {
             background: var(--accent);
             border-color: var(--accent);
-            color: var(--text-on-accent);
+            color: var(--text-on-accent)
         }
 
-        /* Publication list */
         .pub-list {
             max-height: 460px;
-            overflow-y: auto;
+            overflow-y: auto
         }
 
         .pub-list::-webkit-scrollbar {
-            width: 5px;
+            width: 5px
         }
 
         .pub-list::-webkit-scrollbar-thumb {
             background: var(--border);
-            border-radius: 4px;
+            border-radius: 4px
         }
 
         .pub-item {
@@ -476,119 +497,120 @@
             border-radius: var(--radius-sm);
             margin-bottom: 6px;
             border: 1px solid transparent;
-            transition: all 0.15s;
+            transition: all .15s
         }
 
         .pub-item:hover {
             background: var(--bg-card-alt);
-            border-color: var(--border);
+            border-color: var(--border)
         }
 
         .pub-title {
-            font-size: 0.84rem;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-size: .84rem;
+            font-weight: 700;
             line-height: 1.4;
-            margin-bottom: 4px;
+            margin-bottom: 4px
         }
 
         .pub-meta {
-            font-size: 0.74rem;
+            font-size: .74rem;
             color: var(--text-muted);
             display: flex;
             gap: 10px;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: wrap
         }
 
         .pub-journal {
             color: var(--accent);
-            font-weight: 600;
+            font-weight: 700
         }
 
         .author-badge {
             display: inline-flex;
             padding: 1px 8px;
             border-radius: 10px;
-            font-size: 0.66rem;
-            font-weight: 700;
+            font-size: .66rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: .04em
         }
 
         .author-badge.first {
             background: var(--color-first-bg);
-            color: var(--color-first);
+            color: var(--color-first)
         }
 
         .author-badge.middle {
             background: var(--color-middle-bg);
-            color: var(--color-middle);
+            color: var(--color-middle)
         }
 
         .author-badge.last {
             background: var(--color-last-bg);
-            color: var(--color-last);
+            color: var(--color-last)
         }
 
-        /* Heatmap */
+        .author-badge.unknown {
+            background: #e2e8f0;
+            color: var(--text-secondary)
+        }
+
         .heatmap-table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 3px;
+            border-spacing: 3px
         }
 
         .heatmap-table th {
-            font-size: 0.68rem;
-            font-weight: 700;
+            font-size: .68rem;
+            font-weight: 800;
             color: var(--text-muted);
             padding: 6px 4px;
-            text-align: center;
+            text-align: center
         }
 
         .heatmap-table td {
             text-align: center;
             padding: 8px 4px;
             border-radius: 6px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            transition: transform 0.15s;
+            font-size: .78rem;
+            font-weight: 800;
+            transition: transform .15s
         }
 
         .heatmap-table td:first-child {
             text-align: left;
             padding-left: 8px;
-            color: var(--text-secondary);
+            color: var(--text-secondary)
         }
 
         .heatmap-cell:hover {
-            transform: scale(1.1);
+            transform: scale(1.1)
         }
 
-        /* Year selector */
         .year-selector {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-bottom: 14px;
+            margin-bottom: 14px
         }
 
         .fy-badge {
             display: inline-flex;
             padding: 4px 12px;
             background: var(--accent-lighter);
-            border: 1px solid rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(37, 99, 235, .2);
             border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
+            font-size: .78rem;
+            font-weight: 800;
             color: var(--accent);
-            margin-left: auto;
+            margin-left: auto
         }
 
-        /* Timeline */
         .timeline {
             padding-left: 22px;
-            position: relative;
+            position: relative
         }
 
         .timeline::before {
@@ -598,13 +620,13 @@
             top: 0;
             bottom: 0;
             width: 2px;
-            background: linear-gradient(180deg, var(--accent) 0%, var(--color-lecture) 100%);
-            border-radius: 2px;
+            background: linear-gradient(180deg, var(--accent), var(--color-lecture));
+            border-radius: 2px
         }
 
         .timeline-item {
             position: relative;
-            padding: 8px 0 8px 16px;
+            padding: 8px 0 8px 16px
         }
 
         .timeline-item::before {
@@ -616,1304 +638,282 @@
             height: 10px;
             border-radius: 50%;
             background: var(--accent);
-            border: 2px solid var(--bg-card);
+            border: 2px solid var(--bg-card)
         }
 
         .tl-year {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--accent);
+            font-size: .72rem;
+            font-weight: 900;
+            color: var(--accent)
         }
 
         .tl-title {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-size: .82rem;
+            font-weight: 700
         }
 
-        .tl-sub {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-
-        /* Award items */
-        .award-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 4px;
-        }
-
-        .award-item:hover {
-            background: var(--bg-card-alt);
-        }
-
-        .award-year {
-            font-size: 0.74rem;
-            font-weight: 700;
-            color: var(--color-award);
-            min-width: 36px;
-        }
-
-        .award-title {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .award-inst {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-
-        /* Section headings within year detail */
         .section-heading {
-            font-size: 0.84rem;
-            font-weight: 700;
+            font-size: .84rem;
+            font-weight: 800;
             margin: 14px 0 6px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 6px
         }
 
         .no-results {
             text-align: center;
             color: var(--text-muted);
             padding: 32px;
-            font-size: 0.88rem;
+            font-size: .88rem
         }
 
-        /* Chart footnote */
         .chart-footnote {
-            font-size: 0.72rem;
+            font-size: .72rem;
             color: var(--text-muted);
             text-align: center;
             margin-top: 8px;
-            font-style: italic;
+            font-style: italic
         }
 
-        /* CV Selector */
-        .cv-selector-area {
-            margin-bottom: 20px;
-            text-align: left;
+        .extra-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px
         }
 
-        .cv-selector-area h4 {
-            font-size: 0.84rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
+        .mini-list {
+            max-height: 300px;
+            overflow: auto
         }
 
-        .cv-file-list {
-            list-style: none;
-            padding: 0;
+        .mini-item {
+            padding: 9px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .82rem
         }
 
-        .cv-file-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            margin-bottom: 6px;
-            font-size: 0.82rem;
-            cursor: pointer;
-            transition: all 0.15s;
+        .mini-item:last-child {
+            border-bottom: none
         }
 
-        .cv-file-item:hover {
-            border-color: var(--accent);
-            background: var(--accent-lighter);
-        }
-
-        .cv-file-item.selected {
-            border-color: var(--accent);
-            background: var(--accent-lighter);
-            font-weight: 600;
-        }
-
-        .cv-file-item .file-name {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .cv-file-item .remove-btn {
-            background: none;
-            border: none;
+        .mini-meta {
+            font-size: .72rem;
             color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 0 4px;
-            transition: color 0.15s;
+            font-weight: 800
         }
 
-        .cv-file-item .remove-btn:hover {
-            color: var(--color-award);
+        .diag-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px
         }
 
-        /* Animation */
+        .diag-pill {
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 9px;
+            font-size: .78rem
+        }
+
+        .diag-pill b {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 2px
+        }
+
+        .raw-preview {
+            white-space: pre-wrap;
+            max-height: 280px;
+            overflow: auto;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: .72rem
+        }
+
+        .fade-in {
+            animation: fadeIn .25s ease
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(6px);
+                transform: translateY(6px)
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0)
             }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.25s ease;
         }
     </style>
 </head>
 
 <body>
-
-    <!-- ==================== UPLOAD VIEW ==================== -->
     <div id="upload-view">
         <div class="upload-container">
             <h1>Academic CV Dashboard</h1>
-            <p class="subtitle">Upload one or more UPenn-format RTF CVs to generate an interactive dashboard</p>
-
-            <div class="dropzone" id="dropzone">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor">
+            <p class="subtitle">Upload one or more UPenn/FEDS-format RTF CVs to generate an interactive dashboard</p>
+            <div class="dropzone" id="dropzone"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                 </svg>
                 <h3>Upload CV(s)</h3>
-                <p>Drag &amp; drop .rtf files here, or click to browse (supports multiple)</p>
-                <input type="file" id="file-input" accept=".rtf" multiple>
+                <p>Drag & drop .rtf files here, or click to browse (supports multiple)</p><input type="file"
+                    id="file-input" accept=".rtf" multiple>
             </div>
-
-            <div class="cv-selector-area" id="cv-selector-area" style="display:none;">
+            <div class="cv-selector-area" id="cv-selector-area" style="display:none">
                 <h4>📁 Uploaded CVs — select one to review:</h4>
                 <ul class="cv-file-list" id="cv-file-list"></ul>
             </div>
-
-            <div class="settings-group">
-                <label for="faculty-year">Faculty Appointment Start Year (Calendar Year)</label>
-                <input type="number" id="faculty-year" value="2023" min="1970" max="2040">
-                <p class="help-text">Enter the calendar year your faculty appointment began. If you started July 2023,
-                    enter 2023. That becomes Academic Year 1 (FY24).</p>
+            <div class="settings-row">
+                <div class="settings-group"><label for="faculty-year">Faculty Appointment Start Year</label><input
+                        type="number" id="faculty-year" placeholder="Auto-detect" min="1970" max="2040">
+                    <p class="help-text">Leave blank to auto-detect from Faculty Appointments.</p>
+                </div>
+                <div class="settings-group"><label for="last-name-override">Author Last Name Override</label><input
+                        type="text" id="last-name-override" placeholder="Optional, e.g., Glau">
+                    <p class="help-text">Use if author-role detection looks wrong.</p>
+                </div>
             </div>
-
-            <div class="upload-actions">
-                <button class="btn btn-primary" id="btn-generate" disabled onclick="generateDashboard()">Generate
-                    Dashboard</button>
-                <button class="btn btn-secondary" onclick="loadExample()">Load Example</button>
-            </div>
-
+            <div class="upload-actions"><button class="btn btn-primary" id="btn-generate" disabled
+                    onclick="generateDashboard()">Generate Dashboard</button><button class="btn btn-secondary"
+                    onclick="loadExample()">Load Example</button></div>
             <p class="error-msg" id="error-msg"></p>
         </div>
     </div>
-
-    <!-- ==================== DASHBOARD VIEW ==================== -->
     <div id="dashboard-view">
         <header class="dash-header">
             <h1 id="dash-name"></h1>
             <div class="subtitle">Academic Output Dashboard</div>
             <div class="institution" id="dash-institution"></div>
-            <div class="header-actions">
-                <button class="btn btn-secondary btn-upload-new" onclick="showUploadView()">⬆ Review New CV</button>
-            </div>
+            <div class="institution" id="parse-summary"></div>
+            <div class="header-actions"><button class="btn btn-secondary btn-upload-new" onclick="showUploadView()">⬆
+                    Review New CV</button></div>
         </header>
-
-        <!-- Stat Cards -->
         <section class="stats-row" id="stats-row"></section>
-
-        <!-- Charts Row -->
         <div class="two-col">
             <div class="card">
-                <div class="card-title"><span class="emoji">📊</span> PR Research Publications by Author Role</div>
+                <div class="card-title"><span>📊</span> PR Research Publications by Author Role</div>
                 <div class="filter-bar" id="bar-filter"></div>
                 <div class="chart-wrap"><canvas id="barChart"></canvas></div>
                 <p class="chart-footnote" id="bar-chart-footnote"></p>
             </div>
             <div class="card">
-                <div class="card-title"><span class="emoji">📈</span> Cumulative Scholarly Output</div>
+                <div class="card-title"><span>📈</span> Cumulative Scholarly Output</div>
                 <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
             </div>
         </div>
-
-        <!-- Heatmap -->
         <div class="card">
-            <div class="card-title"><span class="emoji">🗓️</span> Academic Output Heatmap</div>
+            <div class="card-title"><span>🗓️</span> Academic Output Heatmap</div>
             <div id="heatmap-container"></div>
         </div>
-
-        <!-- Year-by-Year Detail -->
         <div class="card">
-            <div class="card-title"><span class="emoji">🔍</span> Year-by-Year Detail <span class="fy-badge"
+            <div class="card-title"><span>🔍</span> Year-by-Year Detail <span class="fy-badge"
                     id="fy-detail-badge"></span></div>
             <div class="year-selector" id="year-selector"></div>
             <div id="year-detail-content"></div>
         </div>
-
-        <!-- Lists Row -->
         <div class="two-col">
             <div class="card">
-                <div class="card-title"><span class="emoji">📄</span> PR Research Publications</div>
+                <div class="card-title"><span>📄</span> PR Research Publications</div>
                 <div class="filter-bar" id="pub-tabs"></div>
                 <div class="pub-list" id="pub-list"></div>
             </div>
             <div class="card">
-                <div class="card-title"><span class="emoji">📋</span> Conference Abstracts</div>
+                <div class="card-title"><span>📋</span> Conference Abstracts</div>
                 <div class="filter-bar" id="abs-tabs"></div>
                 <div class="pub-list" id="abs-list"></div>
             </div>
         </div>
-
-        <!-- Timeline -->
         <div class="card">
-            <div class="card-title"><span class="emoji">🎓</span> Education &amp; Training Timeline</div>
+            <div class="card-title"><span>🎓</span> Education & Training Timeline</div>
             <div class="timeline" id="timeline"></div>
         </div>
-
-        <!-- Lectures -->
         <div class="card">
-            <div class="card-title"><span class="emoji">🎤</span> Invited Lectures <span
-                    style="font-size:0.72rem;color:var(--text-muted);font-weight:400;margin-left:4px;">(from "Lectures
-                    by Invitation" section)</span></div>
+            <div class="card-title"><span>🎤</span> Invited Lectures <span
+                    style="font-size:.72rem;color:var(--text-muted);font-weight:400;margin-left:4px">(from “Lectures by
+                    Invitation” section)</span></div>
             <div class="pub-list" id="lecture-list"></div>
         </div>
+        <div class="card">
+            <div class="card-title"><span>🧾</span> Additional CV Sections</div>
+            <div class="extra-grid" id="extra-sections"></div>
+        </div>
+        <div class="card">
+            <div class="card-title"><span>🧪</span> Parse Diagnostics</div>
+            <div id="diagnostics"></div>
+            <details style="margin-top:12px">
+                <summary style="cursor:pointer;font-weight:700;color:var(--text-secondary)">Normalized text preview
+                </summary>
+                <pre class="raw-preview" id="raw-preview"></pre>
+            </details>
+        </div>
     </div>
-
     <script>
-        // ============================================================
-        //  RTF PARSER — parses UPenn-format CV in the browser
-        // ============================================================
-        const RTF_ESCAPES = {
-            "\\'27": "'", "\\'22": '"', "\\'2C": ",", "\\'3A": ":", "\\'2F": "/",
-            "\\'28": "(", "\\'29": ")", "\\'3B": ";", "\\'5B": "[", "\\'5D": "]",
-            "\\'26": "&", "\\'2d": "-", "\\'ae": "®", "\\'96": "–", "\\'97": "—",
-        };
-
-        function decodeRTF(t) {
-            // Multi-byte UTF-8 sequences (e.g. \\'E2\\'80\\'91 → ‑)
-            t = t.replace(/\\'E2\\'80\\'91/gi, '‑');
-            t = t.replace(/\\'E2\\'80\\'93/gi, '–');
-            t = t.replace(/\\'E2\\'80\\'94/gi, '—');
-            t = t.replace(/\\'E2\\'80\\'99/gi, '\u2019');
-            // Standard escapes
-            for (const [esc, ch] of Object.entries(RTF_ESCAPES)) {
-                t = t.split(esc).join(ch);
-                t = t.split(esc.replace("\\'", "\\'")).join(ch);
-            }
-            // Remaining hex escapes
-            t = t.replace(/\\'([0-9a-fA-F]{2})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
-            return t;
-        }
-
-        function stripRTF(t) {
-            t = decodeRTF(t);
-            t = t.replace(/\{\\f\d+[^}]*\}/g, '');
-            t = t.replace(/\\[a-zA-Z]+\d*\s?/g, ' ');
-            t = t.replace(/[{}]/g, '');
-            t = t.replace(/\s+/g, ' ').trim();
-            return t;
-        }
-
-        // Identify section boundaries by underlined headers
-        // Supports both \ul0 (original RTF) and \ulnone (Microsoft Word RTF)
-        function findSections(raw) {
-            // \ul followed by non-alphanumeric (avoids matching \ulnone, \uld, etc.)
-            const headerRe = /\\ul(?![a-zA-Z0-9])([\s\S]*?)(?:\\ul0|\\ulnone)/g;
-            const sections = [];
-            let m;
-            while ((m = headerRe.exec(raw)) !== null) {
-                const decoded = stripRTF(m[1]).replace(/\s+/g, ' ').trim();
-                if (decoded.length > 3 && decoded.length < 200) {
-                    sections.push({ name: decoded, pos: m.index });
-                }
-            }
-            return sections;
-        }
-
-        // Extract numbered items — accepts any \fi-<n> value (Word may differ from -720)
-        function extractNumberedItems(sectionContent) {
-            const re = /\\fi-\d+\s+(\d+)\.\s+([\s\S]*?)\\cell/g;
-            const items = [];
-            let m;
-            while ((m = re.exec(sectionContent)) !== null) {
-                items.push({ number: parseInt(m[1]), rawText: m[2] });
-            }
-            return items;
-        }
-
-        // Extract journal name (underlined text within a publication entry)
-        // Supports both \ul0 (original RTF) and \ulnone (Microsoft Word RTF)
-        function extractJournal(rawText) {
-            const re = /\\ul(?![a-zA-Z0-9])([\s\S]*?)(?:\\ul0|\\ulnone)/;
-            const m = rawText.match(re);
-            if (m) return stripRTF(m[1]).trim();
-            return '';
-        }
-
-        // Extract year and month from publication text
-        const MONTH_MAP = {
-            january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
-            july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
-            jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
-        };
-
-        function extractYearMonth(text) {
-            const clean = stripRTF(text);
-            // Look for "Month YYYY" or "Month, YYYY"
-            const monthYearRe = /\b(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[,\s]+(\d{4})\b/i;
-            const my = clean.match(monthYearRe);
-            if (my) {
-                return { month: MONTH_MAP[my[1].toLowerCase()] || 1, year: parseInt(my[2]) };
-            }
-            // Fallback: find any 4-digit year
-            const years = [...clean.matchAll(/\b(19\d{2}|20\d{2})\b/g)].map(x => parseInt(x[1]));
-            if (years.length > 0) {
-                return { month: 1, year: Math.max(...years) };
-            }
-            return { month: 1, year: 2000 };
-        }
-
-        // Detect author position
-        function detectPosition(rawText, lastName) {
-            const clean = stripRTF(rawText);
-            const colonIdx = clean.indexOf(':');
-            if (colonIdx < 0) return 'middle';
-            const authorStr = clean.substring(0, colonIdx).trim();
-            // Split into individual authors
-            const parts = authorStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
-            if (parts.length === 0) return 'middle';
-            const first = parts[0].toLowerCase();
-            // Last author: last part, but handle semicolons (group authors)
-            let lastAuthorParts = authorStr.split(';')[0].trim().split(',').map(s => s.trim()).filter(s => s.length > 0);
-            const last = lastAuthorParts[lastAuthorParts.length - 1].toLowerCase();
-            const ln = lastName.toLowerCase();
-            if (first.startsWith(ln) || first.includes(ln + ' ')) return 'first';
-            if (last.startsWith(ln) || last.includes(ln + ' ')) return 'last';
-            return 'middle';
-        }
-
-        // Detect faculty appointment year from RTF
-        function detectFacultyYear(raw) {
-            const sections = findSections(raw);
-            const facIdx = sections.findIndex(s => s.name.toLowerCase().includes('faculty appointment'));
-            if (facIdx < 0) return null;
-            const nextIdx = facIdx + 1 < sections.length ? sections[facIdx + 1].pos : raw.length;
-            const content = raw.substring(sections[facIdx].pos, nextIdx);
-            const m = content.match(/(\d{4})-present/i);
-            if (m) return parseInt(m[1]);
-            return null;
-        }
-
-        // Detect name from RTF header
-        // Supports both \ul0 (original RTF) and \ulnone (Microsoft Word RTF)
-        function detectName(raw) {
-            // After "Curriculum Vitae", find all underlined sections and pick the one that is a name
-            const cvIdx = raw.search(/Curriculum Vitae/i);
-            if (cvIdx < 0) return 'Unknown';
-            const after = raw.substring(cvIdx, cvIdx + 2000);
-            const re = /\\ul(?![a-zA-Z0-9])([\s\S]*?)(?:\\ul0|\\ulnone)/g;
-            let m;
-            while ((m = re.exec(after)) !== null) {
-                let text = stripRTF(m[1]).trim().replace(/\s+/g, ' ');
-                // Skip date strings (e.g., "Date: 04/09/2026")
-                if (/^Date/i.test(text)) continue;
-                if (/^\d/.test(text)) continue;
-                if (text.length < 5) continue;
-                // Skip "Curriculum Vitae" itself
-                if (/curriculum vitae/i.test(text)) continue;
-                return text;
-            }
-            return 'Unknown';
-        }
-
-        function detectLastName(fullName) {
-            // "Sanjiv Devendra Mehta, MD, MBE" → "Mehta"
-            const beforeDegree = fullName.split(',')[0].trim();
-            const words = beforeDegree.split(/\s+/);
-            return words[words.length - 1];
-        }
-
-        // ============================================================
-        //  SECTION MAPPING — maps known RTF section titles to categories
-        // ============================================================
-        const SECTION_KEYS = [
-            { key: 'peerReviewed', patterns: ['research publications, peer reviewed', 'research publications, peer reviewed (print or other media)'] },
-            { key: 'peerReviewedReviews', patterns: ['research publications, peer-reviewed reviews'] },
-            { key: 'contributionsCited', patterns: ['contributions to peer-reviewed research publications'] },
-            { key: 'nonPeerReviewed', patterns: ['research publications, non-peer reviewed'] },
-            { key: 'editorials', patterns: ['editorials, reviews, chapters'] },
-            { key: 'abstracts', patterns: ['abstracts'] },
-            { key: 'altMedia', patterns: ['alternative media'] },
-            { key: 'awards', patterns: ['awards, honors'] },
-            { key: 'invitedLectures', patterns: ['lectures by invitation'] },
-            { key: 'education', patterns: ['education:'] },
-            { key: 'training', patterns: ['postgraduate training'] },
-            { key: 'facultyAppointments', patterns: ['faculty appointments'] },
-            { key: 'teaching', patterns: ['major academic and clinical teaching'] },
-            { key: 'committees', patterns: ['academic and institutional committees'] },
-        ];
-
-        function matchSection(sectionName) {
-            const lower = sectionName.toLowerCase();
-            for (const sk of SECTION_KEYS) {
-                for (const p of sk.patterns) {
-                    if (lower.includes(p)) return sk.key;
-                }
-            }
-            return null;
-        }
-
-        // ============================================================
-        //  MAIN PARSE FUNCTION
-        // ============================================================
-        function parseRTF(rtfContent, facultyStartYear) {
-            const raw = rtfContent;
-            const fullName = detectName(raw);
-            const lastName = detectLastName(fullName);
-
-            // Auto-detect faculty year if not provided
-            if (!facultyStartYear) {
-                facultyStartYear = detectFacultyYear(raw) || 2023;
-            }
-
-            const allSections = findSections(raw);
-
-            // Filter to only recognized section headers (skip journal names, etc.)
-            const matchedSections = [];
-            for (const sec of allSections) {
-                const key = matchSection(sec.name);
-                if (key) matchedSections.push({ ...sec, key });
-            }
-
-            // Extract content between consecutive recognized sections
-            const sectionData = {};
-            for (let i = 0; i < matchedSections.length; i++) {
-                const key = matchedSections[i].key;
-                const start = matchedSections[i].pos;
-                const end = (i + 1 < matchedSections.length) ? matchedSections[i + 1].pos : raw.length;
-                const content = raw.substring(start, end);
-                if (!sectionData[key]) sectionData[key] = '';
-                sectionData[key] += content;
-            }
-
-            // Parse publications from each category
-            function parsePubSection(key) {
-                if (!sectionData[key]) return [];
-                const items = extractNumberedItems(sectionData[key]);
-                return items.map(item => {
-                    const ym = extractYearMonth(item.rawText);
-                    return {
-                        number: item.number,
-                        title: extractTitle(item.rawText),
-                        journal: extractJournal(item.rawText),
-                        authors: extractAuthors(item.rawText),
-                        year: ym.year,
-                        month: ym.month,
-                        fiscalYear: toFiscalYear(ym.year, ym.month),
-                        position: detectPosition(item.rawText, lastName),
-                        category: key,
-                    };
-                });
-            }
-
-            function extractTitle(rawText) {
-                const clean = stripRTF(rawText);
-                const colonIdx = clean.indexOf(':');
-                if (colonIdx < 0) return clean.substring(0, 120);
-                let afterColon = clean.substring(colonIdx + 1).trim();
-                // Title ends at the journal (which was underlined) or at a period followed by journal-like text
-                // Simple approach: take text up to the next period that's followed by a space and what looks like journal info
-                const dotIdx = afterColon.search(/\.\s+[A-Z]/);
-                if (dotIdx > 10) return afterColon.substring(0, dotIdx).trim();
-                return afterColon.substring(0, 150).trim();
-            }
-
-            function extractAuthors(rawText) {
-                const clean = stripRTF(rawText);
-                const colonIdx = clean.indexOf(':');
-                if (colonIdx < 0) return '';
-                return clean.substring(0, colonIdx).trim();
-            }
-
-            const peerReviewed = parsePubSection('peerReviewed');
-            const peerReviewedReviews = parsePubSection('peerReviewedReviews');
-            const nonPeerReviewed = parsePubSection('nonPeerReviewed');
-            const contributionsCited = parsePubSection('contributionsCited');
-            const editorials = parsePubSection('editorials');
-            const abstracts = parsePubSection('abstracts');
-            const altMedia = parsePubSection('altMedia');
-
-            // Parse awards
-            const awards = [];
-            if (sectionData.awards) {
-                // Awards are in table rows with year and description cells
-                const rows = sectionData.awards.match(/\\intbl\s+\\ql\s+(.*?)\\cell/g) || [];
-                let currentYear = null;
-                for (const row of rows) {
-                    const text = stripRTF(row).trim();
-                    if (/^\d{4}$/.test(text)) {
-                        currentYear = parseInt(text);
-                    } else if (text.length > 5 && currentYear) {
-                        awards.push({ year: currentYear, title: text, fiscalYear: toFiscalYear(currentYear, 1) });
-                    }
-                }
-            }
-
-            // Parse invited lectures
-            const lectures = [];
-            if (sectionData.invitedLectures) {
-                // Lectures have date cells and description cells
-                const rows = sectionData.invitedLectures.match(/\\intbl\s+\\ql\s+(.*?)\\cell/g) || [];
-                let currentDate = null;
-                for (const row of rows) {
-                    const text = stripRTF(row).trim();
-                    const dateMatch = text.match(/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*[,\s]+(\d{4})$/i);
-                    if (dateMatch) {
-                        currentDate = { month: MONTH_MAP[dateMatch[1].toLowerCase().substring(0, 3)] || 1, year: parseInt(dateMatch[2]), label: text };
-                    } else if (text.length > 20 && currentDate) {
-                        lectures.push({
-                            date: currentDate.label,
-                            year: currentDate.year,
-                            month: currentDate.month,
-                            fiscalYear: toFiscalYear(currentDate.year, currentDate.month),
-                            title: text.substring(0, text.indexOf(',') > 40 ? text.indexOf(',', 40) : text.length).replace(/^"(.*)".*/, '$1') || text.substring(0, 120),
-                            venue: text
-                        });
-                        currentDate = null;
-                    }
-                }
-            }
-
-            // Parse education
-            const education = [];
-            if (sectionData.education) {
-                const rows = sectionData.education.match(/\\intbl\s+\\ql\s+(.*?)\\cell/g) || [];
-                let yr = null, deg = null;
-                for (const row of rows) {
-                    const text = stripRTF(row).trim();
-                    if (/^\d{4}$/.test(text)) yr = parseInt(text);
-                    else if (/^[A-Z]{2,5}$/.test(text)) deg = text;
-                    else if (text.length > 5 && yr && deg) {
-                        education.push({ year: yr, degree: deg, institution: text });
-                        yr = null; deg = null;
-                    }
-                }
-            }
-
-            // Parse training
-            const training = [];
-            if (sectionData.training) {
-                const rows = sectionData.training.match(/\\intbl\s+\\ql\s+(.*?)\\cell/g) || [];
-                let period = null;
-                for (const row of rows) {
-                    const text = stripRTF(row).trim();
-                    if (/^\d{4}-\d{4}$/.test(text) || /^\d{4}-present$/i.test(text)) period = text;
-                    else if (text.length > 5 && period) {
-                        training.push({ period, role: text });
-                        period = null;
-                    }
-                }
-            }
-
-            // Committees count
-            let committeeCount = 0;
-            if (sectionData.committees) {
-                const rows = sectionData.committees.match(/\\intbl\s+\\ql\s+(.*?)\\cell/g) || [];
-                for (const row of rows) {
-                    const text = stripRTF(row).trim();
-                    if (text.length > 10 && !text.match(/^\d{4}/) && !text.match(/^Member|^Resident|^Physician|^Data/i) === false) {
-                        // heuristic: count rows that look like committee descriptions
-                    }
-                }
-                // Simpler: count date-range cells
-                const ranges = sectionData.committees.match(/\d{4}-(present|\d{4})/gi) || [];
-                committeeCount = ranges.length;
-            }
-
-            return {
-                name: fullName,
-                lastName,
-                facultyStartYear,
-                facultyStartFY: toFiscalYear(facultyStartYear, 7), // starts July → next FY
-                education,
-                training,
-                committeeCount,
-                awards: awards.sort((a, b) => b.year - a.year), // latest first
-                lectures,
-                peerReviewed,
-                peerReviewedReviews,
-                nonPeerReviewed,
-                contributionsCited,
-                editorials,
-                abstracts,
-                altMedia,
-            };
-        }
-
-        // ============================================================
-        //  FISCAL YEAR HELPERS
-        // ============================================================
-        function toFiscalYear(year, month) {
-            // July 2025 = FY26
-            if (month >= 7) return year + 1;
-            return year;
-        }
-
-        function fyLabel(fy, facultyStartFY) {
-            const yr = fy - facultyStartFY + 1;
-            if (yr >= 1) return `FY${String(fy).slice(-2)} (Yr ${yr})`;
-            return `FY${String(fy).slice(-2)}`;
-        }
-
-        // ============================================================
-        //  GLOBAL STATE
-        // ============================================================
-        let PARSED = null;
-        let barChartInstance = null;
-        let lineChartInstance = null;
-
-        // ============================================================
-        //  EXAMPLE DATA (Dr. Mehta's CV — pre-parsed for demo)
-        // ============================================================
-        function getExampleData() {
-            const facultyStartYear = 2023;
-            const facultyStartFY = 2024; // July 2023 = FY24
-
-            function mkPub(n, yr, mo, title, journal, authors, pos, cat) {
-                return { number: n, year: yr, month: mo, fiscalYear: toFiscalYear(yr, mo), title, journal, authors, position: pos, category: cat };
-            }
-
-            return {
-                name: 'Sanjiv Devendra Mehta, MD, MBE, MSCE',
-                lastName: 'Mehta',
-                facultyStartYear,
-                facultyStartFY,
-                education: [
-                    { year: 2012, degree: 'BA', institution: 'Columbia University (Economics-Philosophy & Biology)' },
-                    { year: 2016, degree: 'MD', institution: 'UPenn Perelman School of Medicine (Medicine)' },
-                    { year: 2016, degree: 'MBE', institution: 'University of Pennsylvania (Bioethics)' },
-                    { year: 2025, degree: 'MSCE', institution: 'University of Pennsylvania (Clinical Epidemiology)' },
-                ],
-                training: [
-                    { period: '2016-2017', role: 'Intern, Pediatrics, CHOP' },
-                    { period: '2017-2019', role: 'Resident, Pediatrics, CHOP' },
-                    { period: '2019-2022', role: 'Fellow, Pediatric Critical Care, CHOP' },
-                    { period: '2022-2023', role: 'Research Fellow, Hospital Epidemiology, CHOP' },
-                ],
-                committeeCount: 11,
-                awards: [
-                    { year: 2025, title: 'Fellow Teaching Award, Pediatric Critical Care Division', fiscalYear: 2025 },
-                    { year: 2025, title: '2025 Congress Travel Scholarship, SCCM', fiscalYear: 2025 },
-                    { year: 2025, title: 'Early Career Faculty Honor Roll, CHOP', fiscalYear: 2025 },
-                    { year: 2024, title: 'National Academy of Medicine Scholar in Diagnostic Excellence', fiscalYear: 2024 },
-                    { year: 2023, title: 'Critical Care Division Research Award, CHOP', fiscalYear: 2023 },
-                    { year: 2019, title: 'Senior Resident Teaching Award, CHOP', fiscalYear: 2019 },
-                    { year: 2016, title: 'Perelman Scholar, UPenn', fiscalYear: 2016 },
-                    { year: 2012, title: "King's Crown Leadership Award, Columbia University", fiscalYear: 2012 },
-                    { year: 2012, title: 'Graduation with honors, magna cum laude, Columbia University', fiscalYear: 2012 },
-                ],
-                lectures: [
-                    { date: 'Jun 2025', year: 2025, month: 6, fiscalYear: 2025, title: 'Transforming our Approach to Pediatric Clinical Deterioration', venue: 'NAM Diagnostic Excellence Symposium, Washington DC' },
-                    { date: 'May 2025', year: 2025, month: 5, fiscalYear: 2025, title: 'Building System Intelligence to Solve Wicked Problems', venue: 'CHOP-Boston Anesthesia Grand Rounds, Virtual' },
-                    { date: 'Mar 2025', year: 2025, month: 3, fiscalYear: 2025, title: 'Development and Validation of a Pediatric ICU Deterioration Prediction Model', venue: 'PediRES-Q Monthly Meeting, Virtual' },
-                    { date: 'Jan 2025', year: 2025, month: 1, fiscalYear: 2025, title: 'Pre-Arrest Vital Sign Abnormalities Associated with Lower Survival in Pediatric IHCA', venue: 'SCCM Critical Care Congress, Orlando FL' },
-                    { date: 'Jan 2025', year: 2025, month: 1, fiscalYear: 2025, title: 'Development and Validation of a Pediatric ICU Deterioration Prediction Model using ML', venue: 'SCCM Critical Care Congress, Orlando FL' },
-                    { date: 'Nov 2023', year: 2023, month: 11, fiscalYear: 2024, title: 'Roundtable 3: Who Ya Gonna Call?', venue: 'Beatrice Nicoletti CHOP Resuscitation Science Conference, Philadelphia PA' },
-                    { date: 'Apr 2022', year: 2022, month: 4, fiscalYear: 2022, title: 'Arrest Identification, Prediction, Prevention Starts Outside the ICU', venue: 'Beatrice Nicoletti CHOP Resuscitation Conference, Philadelphia PA' },
-                ],
-                peerReviewed: [
-                    mkPub(1, 2011, 1, 'Multimodal behavior program for ADHD incorporating yoga: a pilot study', 'ISRN Pediatr', 'Mehta S, Mehta V, et al', 'first', 'peerReviewed'),
-                    mkPub(2, 2012, 1, 'Peer-mediated multimodal intervention program for ADHD in India: one-year follow-up', 'ISRN Pediatr', 'Mehta S, Shah D, et al', 'first', 'peerReviewed'),
-                    mkPub(3, 2017, 3, 'Integrating Theory, Content, and Method to Foster Critical Consciousness in Medical Students', 'Acad Med', 'Dao DK, ..., Mehta SD, ..., DeLisser HM', 'middle', 'peerReviewed'),
-                    mkPub(4, 2020, 2, 'Improving Disposition Decision-Making for Pediatric DKA: A QI Study', 'Pediatr Qual Saf', 'Kaushal T, ..., Mehta S, ..., Srinivasan V', 'middle', 'peerReviewed'),
-                    mkPub(5, 2021, 2, 'Ventilator-Weaning Pathway Associated with Decreased Ventilator Days in PARDS', 'Crit Care Med', 'Mehta SD, Martin K, et al', 'first', 'peerReviewed'),
-                    mkPub(6, 2021, 5, 'A Resident-driven Initiative to Increase Bedside Teaching on Interdisciplinary Rounds', 'Pediatr Qual Saf', 'Becker A, ..., Mehta S, ..., Hart J', 'middle', 'peerReviewed'),
-                    mkPub(7, 2022, 1, 'A QI Initiative to Improve Patient Safety Event Reporting by Residents', 'Pediatr Qual Saf', 'Herchline D, ..., Mehta S, Hart J', 'middle', 'peerReviewed'),
-                    mkPub(8, 2022, 5, 'Leveraging EHR Data to Evaluate Late Recognition of Deterioration with Outcomes', 'Hosp Pediatr', 'Mehta SD, Muthu N, et al', 'first', 'peerReviewed'),
-                    mkPub(9, 2023, 6, 'Opportunities to improve diagnosis in emergency transfers to the PICU', 'J Hosp Med', 'Mehta SD, Congdon M, et al', 'first', 'peerReviewed'),
-                    mkPub(10, 2023, 10, 'Decoding ChatGPT: A primer on large language models for clinicians', 'Intelligence-Based Medicine', 'Hunter RB, Mehta SD, et al', 'middle', 'peerReviewed'),
-                    mkPub(11, 2024, 4, 'Implementation of a critical care outreach team in a children\'s hospital', 'Resuscitation Plus', 'Mehta S, Galligan MM, et al', 'first', 'peerReviewed'),
-                    mkPub(12, 2024, 5, 'NIPPV Use and In-Hospital Cardiac Arrest in Bronchiolitis', 'Crit Care Explor', 'Shepard LN, Mehta S, et al', 'middle', 'peerReviewed'),
-                    mkPub(13, 2024, 11, 'Using ChatGPT to Provide Patient-Specific Answers to Parental Questions in PICU', 'Pediatrics', 'Hunter RB, ..., Mehta S', 'last', 'peerReviewed'),
-                    mkPub(14, 2025, 2, 'Geography and age drive racial/ethnic disparities in hospital mortality for pediatric CAP', 'Lancet Reg Health Am', 'Gathers CL, ..., Mehta SD, ..., Keim G', 'middle', 'peerReviewed'),
-                    mkPub(15, 2025, 5, 'Development and Validation of an EHR-Based PARDS Subphenotype Classifier', 'Pediatr Crit Care Med', 'Balcarcel DR, ..., Mehta SD, ..., Yehya N', 'middle', 'peerReviewed'),
-                    mkPub(16, 2025, 5, 'Temporary Femoral CVCs in the PICU: Catheter Tip Position and VTE', 'Pediatr Crit Care Med', 'Good RJ, ..., Mehta SD, ..., Himebauch AS', 'middle', 'peerReviewed'),
-                    mkPub(17, 2025, 11, 'Do Emergency Transfers Reflect Hospital Quality?', 'Hosp Pediatr', 'Lockwood JM, Bajaj L, Mehta SD', 'last', 'peerReviewed'),
-                    mkPub(18, 2025, 9, 'Prearrest vital sign abnormalities and outcomes in pediatric ICU cardiac arrest: GWTG-R', 'Resuscitation', 'Mehta SD, Gathers C, et al', 'first', 'peerReviewed'),
-                    mkPub(19, 2025, 12, 'Delayed Bilateral ICA Occlusion in a Pediatric Patient Following Traumatic Injury', 'J Child Neurol', 'Belfer SJ, ..., Mehta S, ..., Kundishora AJ', 'middle', 'peerReviewed'),
-                    mkPub(20, 2026, 1, 'AI chatbots in the PICU: parental enthusiasm contrasts with socioeconomic disparities', 'Inform Health Soc Care', 'Hunter RB, ..., Mehta S', 'last', 'peerReviewed'),
-                    mkPub(21, 2026, 1, 'Emergency Transfers Are Associated With Increased Financial Charges', 'Hosp Pediatr', 'Mehta SD, Galligan M, et al', 'first', 'peerReviewed'),
-                ],
-                peerReviewedReviews: [],
-                nonPeerReviewed: [],
-                contributionsCited: [],
-                editorials: [
-                    mkPub(1, 2025, 7, 'Feedback loops in ICU prognostic models: an under-recognised threat to clinical validity', 'Lancet Digital Health', 'Balcarcel DR, Mehta SD, et al', 'middle', 'editorials'),
-                    mkPub(2, 2025, 7, 'Gemcitabine and Oxaliplatin-Induced VOD in Pediatric Germ Cell Tumor', 'Pediatric Blood Cancer', 'Ortiz J, ..., Mehta SD, ..., Zheng DJ', 'middle', 'editorials'),
-                ],
-                abstracts: [
-                    mkPub(1, 2023, 4, 'Acting on \'Gut Instinct\': Implementation Assessment of a Clinician Concern Process', 'PAS Meeting, Washington DC', 'Mehta SD', 'first', 'abstracts'),
-                    mkPub(2, 2023, 4, 'Following \'Gut Instinct\': Implementation Assessment of a Clinician Concern Process', 'PAS Meeting, Washington DC', 'Mehta SD, Galligan M, et al', 'first', 'abstracts'),
-                    mkPub(3, 2024, 1, 'Hemodynamic POCUS in Pediatric Sepsis Associated with Decreased Fluid Overload', 'Crit Care Med (CCM Phoenix)', 'Glau C, ..., Mehta S, ..., Nishisaki A', 'middle', 'abstracts'),
-                    mkPub(4, 2024, 1, 'Femoral CVC Tip Malposition in Children Not Associated with VTE', 'Crit Care Med (CCM Phoenix)', 'Good R, ..., Mehta S, ..., Himebauch A', 'middle', 'abstracts'),
-                    mkPub(5, 2024, 1, 'Evaluation of Clinician \'Gut\' Instinct for Children at Risk for Deterioration', 'Crit Care Med (CCM Phoenix)', 'Mehta S, Galligan M, et al', 'first', 'abstracts'),
-                    mkPub(6, 2024, 1, 'Proactive Critical Care Outreach Team Enhances Identification of At-Risk Patients', 'Crit Care Med (CCM Phoenix)', 'Mehta S, Galligan M, et al', 'first', 'abstracts'),
-                    mkPub(7, 2024, 1, 'Respiratory Illness Confounds PH-Cardiac Arrest Outcomes Association', 'Crit Care Med (CCM Phoenix)', 'Mehta S, Kienzle M, et al', 'first', 'abstracts'),
-                    mkPub(8, 2025, 1, 'Predictive Model for Non-Escalation in Bronchiolitis', 'Crit Care Med (CCM Orlando)', 'Balcarcel D, ..., Mehta SD', 'last', 'abstracts'),
-                    mkPub(9, 2025, 1, 'AI Chatbots in the PICU: Parental Enthusiasm vs Socioeconomic Disparities', 'Crit Care Med (CCM Orlando)', 'Hunter RB, ..., Mehta S', 'middle', 'abstracts'),
-                    mkPub(10, 2025, 1, 'Novel Predictive Model for Pediatric BMV Breath Quality via Capnography', 'Crit Care Med (CCM Orlando)', 'Hyde E, Mehta SD, et al', 'middle', 'abstracts'),
-                    mkPub(11, 2025, 2, 'Predicting Noninvasive Failure in Children with a Risk Model', 'Crit Care Med (CCM Orlando)', 'Napolitano N, ..., Mehta SD, ..., Nishisaki A', 'middle', 'abstracts'),
-                    mkPub(12, 2026, 3, 'Neighborhood Factors and Ward-to-PICU Transfers', 'Crit Care Med (SCCM)', 'Magee P, Yehya N, Mehta S', 'middle', 'abstracts'),
-                ],
-                altMedia: [
-                    mkPub(1, 2018, 1, 'Pathway for Kawasaki Disease', 'CHOP Clinical Pathway', 'Whitney D, ..., Mehta S, ..., Pharm D', 'middle', 'altMedia'),
-                    mkPub(2, 2025, 5, 'Technology & Innovation in Pediatrics ICUs: A Progressive Look at North America', 'WFPICCS Podcast', 'Mehta S, et al', 'first', 'altMedia'),
-                ],
-            };
-        }
-
-        // ============================================================
-        //  DASHBOARD RENDERING
-        // ============================================================
-        function renderDashboard(data) {
-            PARSED = data;
-            const fsFY = data.facultyStartFY;
-
-            // Header
-            document.getElementById('dash-name').textContent = data.name;
-            document.getElementById('dash-institution').textContent =
-                'Assistant Professor · Anesthesiology & Critical Care · Children\'s Hospital of Philadelphia · Perelman School of Medicine';
-
-            // All "counting" items (NOT abstracts)
-            const countingItems = [
-                ...data.peerReviewed,
-                ...data.peerReviewedReviews,
-                ...data.nonPeerReviewed,
-                ...data.contributionsCited,
-                ...data.editorials,
-            ];
-
-            // All peer-reviewed for bar chart (first/middle/last)
-            const prItems = [
-                ...data.peerReviewed,
-                ...data.peerReviewedReviews,
-                ...data.nonPeerReviewed,
-            ];
-
-            const currentFY = toFiscalYear(new Date().getFullYear(), new Date().getMonth() + 1);
-            const facultyYears = currentFY - fsFY + 1;
-
-            // ---- STAT CARDS ----
-            const statsRow = document.getElementById('stats-row');
-            const firstAuthorPR = prItems.filter(p => p.position === 'first').length;
-            const seniorAuthorPR = prItems.filter(p => p.position === 'last').length;
-            const stats = [
-                { n: countingItems.length, label: 'Scholarly<br>Works' },
-                { n: data.peerReviewed.length, label: 'PR Research<br>Publications' },
-                { n: firstAuthorPR, label: 'First Author<br>Publications' },
-                { n: seniorAuthorPR, label: 'Senior Author<br>Publications' },
-                { n: data.abstracts.length, label: 'Conference<br>Abstracts' },
-                { n: Math.max(facultyYears, 0), label: `Years<br>at Rank` },
-            ];
-            statsRow.innerHTML = stats.map(s =>
-                `<div class="stat-card"><div class="stat-number">${s.n}</div><div class="stat-label">${s.label}</div></div>`
-            ).join('');
-
-            // ---- Collect all fiscal years ----
-            const allFYs = [...new Set([
-                ...countingItems.map(p => p.fiscalYear),
-                ...data.abstracts.map(a => a.fiscalYear),
-                ...data.altMedia.map(m => m.fiscalYear),
-            ])].sort();
-
-            // ---- BAR CHART (peer-reviewed by author position per FY) ----
-            renderBarChart(prItems, allFYs, fsFY, 'all');
-
-            // Bar chart footnote
-            document.getElementById('bar-chart-footnote').textContent =
-                'Denominator: Peer-reviewed research publications + peer-reviewed reviews + non-peer-reviewed publications (excludes abstracts, editorials, and alternative media).';
-
-            // Filter buttons for bar chart
-            const barFilter = document.getElementById('bar-filter');
-            barFilter.innerHTML = ['all', 'first', 'middle', 'last'].map(f =>
-                `<button class="filter-btn ${f === 'all' ? 'active' : ''}" onclick="filterBar('${f}')">${f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1) + ' Author'}</button>`
-            ).join('');
-
-            // ---- LINE CHART (cumulative scholarly output by category) ----
-            renderLineChart(data, allFYs, fsFY);
-
-            // ---- HEATMAP ----
-            renderHeatmap(data, allFYs, fsFY);
-
-            // ---- YEAR-BY-YEAR DETAIL ----
-            renderYearSelector(data, allFYs, fsFY);
-
-            // ---- PUBLICATION LIST ----
-            renderPubList(data.peerReviewed, 'pub', fsFY);
-            renderPubTabs(data.peerReviewed, 'pub');
-
-            // ---- ABSTRACT LIST ----
-            renderPubList(data.abstracts, 'abs', fsFY);
-            renderPubTabs(data.abstracts, 'abs');
-
-            // ---- TIMELINE ----
-            renderTimeline(data);
-
-            // ---- LECTURES ----
-            renderLectures(data.lectures, fsFY);
-
-            // Show dashboard
-            document.getElementById('upload-view').style.display = 'none';
-            document.getElementById('dashboard-view').style.display = 'block';
-        }
-
-        // ---- Bar Chart ----
-        function renderBarChart(prItems, allFYs, fsFY, filter) {
-            const ctx = document.getElementById('barChart').getContext('2d');
-            const fys = allFYs.filter(fy => prItems.some(p => p.fiscalYear === fy));
-            const labels = fys.map(fy => fyLabel(fy, fsFY));
-
-            const datasets = [];
-            if (filter === 'all' || filter === 'first') {
-                datasets.push({
-                    label: 'First Author',
-                    data: fys.map(fy => prItems.filter(p => p.fiscalYear === fy && p.position === 'first').length),
-                    backgroundColor: '#059669cc', borderColor: '#059669', borderWidth: 1, borderRadius: 4,
-                });
-            }
-            if (filter === 'all' || filter === 'middle') {
-                datasets.push({
-                    label: 'Middle Author',
-                    data: fys.map(fy => prItems.filter(p => p.fiscalYear === fy && p.position === 'middle').length),
-                    backgroundColor: '#d97706cc', borderColor: '#d97706', borderWidth: 1, borderRadius: 4,
-                });
-            }
-            if (filter === 'all' || filter === 'last') {
-                datasets.push({
-                    label: 'Last Author',
-                    data: fys.map(fy => prItems.filter(p => p.fiscalYear === fy && p.position === 'last').length),
-                    backgroundColor: '#7c3aedcc', borderColor: '#7c3aed', borderWidth: 1, borderRadius: 4,
-                });
-            }
-
-            if (barChartInstance) barChartInstance.destroy();
-            barChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: { labels, datasets },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1 } } },
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, font: { size: 11, family: 'Inter' } } } },
-                }
-            });
-        }
-
-        function filterBar(f) {
-            document.querySelectorAll('#bar-filter .filter-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(f)));
-            const prItems = [...PARSED.peerReviewed, ...PARSED.peerReviewedReviews, ...PARSED.nonPeerReviewed];
-            const allFYs = [...new Set([...prItems.map(p => p.fiscalYear)])].sort();
-            renderBarChart(prItems, allFYs, PARSED.facultyStartFY, f);
-        }
-
-        // ---- Line Chart (cumulative) ----
-        function renderLineChart(data, allFYs, fsFY) {
-            const ctx = document.getElementById('lineChart').getContext('2d');
-            const labels = allFYs.map(fy => fyLabel(fy, fsFY));
-
-            // Categories that count
-            const cats = [
-                { key: 'peerReviewed', label: 'PR Research', color: '#2563eb' },
-                { key: 'peerReviewedReviews', label: 'PR Reviews', color: '#0891b2' },
-                { key: 'nonPeerReviewed', label: 'Non-PR', color: '#059669' },
-                { key: 'contributionsCited', label: 'Cited not author', color: '#d97706' },
-                { key: 'editorials', label: 'Editorials/Reviews/Chapters', color: '#be185d' },
-            ];
-
-            const allCounting = [...data.peerReviewed, ...data.peerReviewedReviews, ...data.nonPeerReviewed, ...data.contributionsCited, ...data.editorials];
-
-            // Cumulative total
-            let cumTotal = 0;
-            const totalData = allFYs.map(fy => {
-                cumTotal += allCounting.filter(p => p.fiscalYear === fy).length;
-                return cumTotal;
-            });
-
-            const datasets = [{
-                label: 'Total Scholarly Works',
-                data: totalData,
-                borderColor: '#2563eb',
-                backgroundColor: '#2563eb20',
-                fill: true,
-                tension: 0.3,
-                pointRadius: 4,
-                borderWidth: 2.5,
-            }];
-
-            // Add individual category lines if they have data
-            for (const cat of cats) {
-                const items = data[cat.key];
-                if (items.length === 0) continue;
-                let cum = 0;
-                datasets.push({
-                    label: cat.label,
-                    data: allFYs.map(fy => { cum += items.filter(p => p.fiscalYear === fy).length; return cum; }),
-                    borderColor: cat.color,
-                    backgroundColor: 'transparent',
-                    tension: 0.3,
-                    pointRadius: 3,
-                    borderWidth: 1.5,
-                    borderDash: [5, 3],
-                });
-            }
-
-            if (lineChartInstance) lineChartInstance.destroy();
-            lineChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: { labels, datasets },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { stepSize: 2 } } },
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, font: { size: 11, family: 'Inter' } } } },
-                }
-            });
-        }
-
-        // ---- Heatmap ----
-        function renderHeatmap(data, allFYs, fsFY) {
-            const container = document.getElementById('heatmap-container');
-            const categories = [
-                { label: 'PR Research', items: data.peerReviewed },
-                { label: 'Editorials/Reviews/Chapters', items: data.editorials },
-                { label: 'Abstracts', items: data.abstracts },
-                { label: 'Alt Media', items: data.altMedia },
-                { label: 'Invited Lectures', items: data.lectures },
-            ];
-
-            const rows = allFYs.map(fy => ({
-                label: fyLabel(fy, fsFY),
-                values: categories.map(c => (c.items || []).filter(i => i.fiscalYear === fy).length),
-            }));
-
-            const maxVal = Math.max(1, ...rows.flatMap(r => r.values));
-
-            function cellColor(v) {
-                if (v === 0) return '#f1f5f9';
-                const t = v / maxVal;
-                // Light blue gradient
-                const r = Math.round(219 - t * 180);
-                const g = Math.round(234 - t * 120);
-                const b = Math.round(254 - t * 20);
-                return `rgb(${r},${g},${b})`;
-            }
-
-            let html = '<table class="heatmap-table"><thead><tr><th></th>';
-            categories.forEach(c => html += `<th>${c.label}</th>`);
-            html += '</tr></thead><tbody>';
-            rows.forEach(r => {
-                html += `<tr><td>${r.label}</td>`;
-                r.values.forEach(v => {
-                    const txtColor = v === 0 ? '#cbd5e1' : (v >= maxVal * 0.6 ? '#fff' : '#1e293b');
-                    html += `<td class="heatmap-cell" style="background:${cellColor(v)};color:${txtColor}">${v}</td>`;
-                });
-                html += '</tr>';
-            });
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        }
-
-        // ---- Year-by-Year Detail ----
-        function renderYearSelector(data, allFYs, fsFY) {
-            const selector = document.getElementById('year-selector');
-            selector.innerHTML = allFYs.map(fy =>
-                `<button class="year-btn" data-fy="${fy}" onclick="showYearDetail(${fy})">${fyLabel(fy, fsFY)}</button>`
-            ).join('');
-            if (allFYs.length > 0) showYearDetail(allFYs[allFYs.length - 1]);
-        }
-
-        function showYearDetail(fy) {
-            const data = PARSED;
-            const fsFY = data.facultyStartFY;
-            document.querySelectorAll('.year-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.fy) === fy));
-
-            const groups = [
-                { label: '📄 PR Research Publications', items: data.peerReviewed.filter(p => p.fiscalYear === fy), color: 'var(--accent)' },
-                { label: '✏️ Editorials/Reviews/Chapters', items: data.editorials.filter(p => p.fiscalYear === fy), color: 'var(--color-editorial)' },
-                { label: '📋 Conference Abstracts', items: data.abstracts.filter(a => a.fiscalYear === fy), color: 'var(--color-last)' },
-                { label: '🎤 Invited Lectures', items: data.lectures.filter(l => l.fiscalYear === fy), color: 'var(--color-lecture)' },
-            ];
-
-            const totalOutputs = groups.reduce((s, g) => s + g.items.length, 0);
-            document.getElementById('fy-detail-badge').textContent = `${totalOutputs} items in ${fyLabel(fy, fsFY)}`;
-
-            let html = '';
-            for (const g of groups) {
-                if (g.items.length === 0) continue;
-                html += `<div class="section-heading fade-in" style="color:${g.color}">${g.label} (${g.items.length})</div>`;
-                html += g.items.map(item => `
-            <div class="pub-item fade-in">
-                <div class="pub-title">${item.title}</div>
-                <div class="pub-meta">
-                    <span class="pub-journal">${item.journal || item.venue || ''}</span>
-                    ${item.position ? `<span class="author-badge ${item.position}">${item.position} author</span>` : ''}
-                </div>
-            </div>
-        `).join('');
-            }
-            if (!html) html = '<div class="no-results">No academic output recorded for this fiscal year.</div>';
-            document.getElementById('year-detail-content').innerHTML = html;
-        }
-
-        // ---- Publication List ----
-        function renderPubList(items, prefix, fsFY) {
-            const container = document.getElementById(`${prefix}-list`);
-            const sorted = [...items].sort((a, b) => b.fiscalYear - a.fiscalYear || b.number - a.number);
-            container.innerHTML = sorted.map(p => `
-        <div class="pub-item" data-pos="${p.position}">
-            <div class="pub-title">${p.number}. ${p.title}</div>
-            <div class="pub-meta">
-                <span class="pub-journal">${p.journal}</span>
-                <span>${fyLabel(p.fiscalYear, fsFY)}</span>
-                <span class="author-badge ${p.position}">${p.position} author</span>
-            </div>
-        </div>
-    `).join('');
-        }
-
-        function renderPubTabs(items, prefix) {
-            const tabs = document.getElementById(`${prefix}-tabs`);
-            const counts = { all: items.length, first: 0, middle: 0, last: 0 };
-            items.forEach(p => { if (counts[p.position] !== undefined) counts[p.position]++; });
-            tabs.innerHTML = ['all', 'first', 'middle', 'last'].map(f =>
-                `<button class="filter-btn ${f === 'all' ? 'active' : ''}" onclick="filterPubList('${prefix}','${f}')">${f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)} (${counts[f]})</button>`
-            ).join('');
-        }
-
-        function filterPubList(prefix, filter) {
-            document.querySelectorAll(`#${prefix}-tabs .filter-btn`).forEach(b =>
-                b.classList.toggle('active', b.textContent.toLowerCase().startsWith(filter))
-            );
-            const container = document.getElementById(`${prefix}-list`);
-            container.querySelectorAll('.pub-item').forEach(el => {
-                el.style.display = (filter === 'all' || el.dataset.pos === filter) ? '' : 'none';
-            });
-        }
-
-        // ---- Awards ----
-        function renderAwards(awards) {
-            // Already sorted latest-first in data
-            document.getElementById('awards-list').innerHTML = awards.map(a => `
-        <div class="award-item">
-            <div class="award-year">${a.year}</div>
-            <div>
-                <div class="award-title">${a.title}</div>
-            </div>
-        </div>
-    `).join('');
-        }
-
-        // ---- Timeline ----
-        function renderTimeline(data) {
-            const items = [
-                ...data.education.map(e => ({ year: e.year, title: `${e.degree} — ${e.institution}`, type: 'edu' })),
-                ...data.training.map(t => ({ year: parseInt(t.period), title: `${t.role} (${t.period})`, type: 'train' })),
-                { year: data.facultyStartYear, title: `Faculty Appointment (${data.facultyStartYear}–present)`, type: 'faculty' },
-            ].sort((a, b) => a.year - b.year);
-
-            document.getElementById('timeline').innerHTML = items.map(i => `
-        <div class="timeline-item">
-            <div class="tl-year">${i.year}</div>
-            <div class="tl-title">${i.title}</div>
-        </div>
-    `).join('');
-        }
-
-        // ---- Lectures ----
-        function renderLectures(lectures, fsFY) {
-            const sorted = [...lectures].sort((a, b) => b.fiscalYear - a.fiscalYear || b.month - a.month);
-            document.getElementById('lecture-list').innerHTML = sorted.map(l => `
-        <div class="pub-item">
-            <div class="pub-title">${l.title}</div>
-            <div class="pub-meta">
-                <span class="pub-journal">${l.venue}</span>
-                <span>${l.date}</span>
-                <span style="color:var(--text-muted)">${fyLabel(l.fiscalYear, fsFY)}</span>
-            </div>
-        </div>
-    `).join('');
-        }
-
-        // ============================================================
-        //  UPLOAD HANDLING — supports multiple CVs
-        // ============================================================
-        let uploadedCVs = []; // Array of { name, content }
-        let selectedCVIndex = -1;
-
-        document.getElementById('dropzone').addEventListener('dragover', e => {
-            e.preventDefault();
-            e.currentTarget.classList.add('dragover');
-        });
-        document.getElementById('dropzone').addEventListener('dragleave', e => {
-            e.currentTarget.classList.remove('dragover');
-        });
-        document.getElementById('dropzone').addEventListener('drop', e => {
-            e.preventDefault();
-            e.currentTarget.classList.remove('dragover');
-            if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
-        });
-        document.getElementById('file-input').addEventListener('change', e => {
-            if (e.target.files.length > 0) handleFiles(e.target.files);
-        });
-
-        function handleFiles(fileList) {
-            for (const file of fileList) {
-                if (!file.name.toLowerCase().endsWith('.rtf')) {
-                    showError(`Skipped "${file.name}" — only .rtf files are supported.`);
-                    continue;
-                }
-                // Avoid duplicates by name
-                if (uploadedCVs.some(cv => cv.name === file.name)) continue;
-                const reader = new FileReader();
-                reader.onload = () => {
-                    uploadedCVs.push({ name: file.name, content: reader.result });
-                    // Auto-select the newly added file
-                    selectedCVIndex = uploadedCVs.length - 1;
-                    renderCVSelector();
-                    document.getElementById('btn-generate').disabled = false;
-                    hideError();
-                };
-                // RTF files from Microsoft Word use Windows-1252 (ANSI) encoding.
-                // Reading as latin1 gives a 1-to-1 byte mapping; RTF's \\'xx hex escapes
-                // handle all non-ASCII characters so this is safe for all RTF sources.
-                reader.readAsText(file, 'windows-1252');
-            }
-        }
-
-        function renderCVSelector() {
-            const area = document.getElementById('cv-selector-area');
-            const list = document.getElementById('cv-file-list');
-            if (uploadedCVs.length === 0) {
-                area.style.display = 'none';
-                return;
-            }
-            area.style.display = 'block';
-            list.innerHTML = uploadedCVs.map((cv, i) => `
-        <li class="cv-file-item ${i === selectedCVIndex ? 'selected' : ''}" onclick="selectCV(${i})">
-            <span class="file-name">📎 ${cv.name}</span>
-            <button class="remove-btn" onclick="event.stopPropagation(); removeCV(${i})" title="Remove">✕</button>
-        </li>
-    `).join('');
-        }
-
-        function selectCV(index) {
-            selectedCVIndex = index;
-            renderCVSelector();
-        }
-
-        function removeCV(index) {
-            uploadedCVs.splice(index, 1);
-            if (selectedCVIndex >= uploadedCVs.length) selectedCVIndex = uploadedCVs.length - 1;
-            renderCVSelector();
-            if (uploadedCVs.length === 0) {
-                document.getElementById('btn-generate').disabled = true;
-            }
-        }
-
-        function generateDashboard() {
-            if (selectedCVIndex < 0 || selectedCVIndex >= uploadedCVs.length) {
-                showError('Please select a CV to review.');
-                return;
-            }
-            try {
-                const facYear = parseInt(document.getElementById('faculty-year').value) || 2023;
-                const data = parseRTF(uploadedCVs[selectedCVIndex].content, facYear);
-
-                // ---- Post-parse diagnostics ----
-                const warnings = [];
-
-                if (data.name === 'Unknown') {
-                    warnings.push(
-                        '⚠️ Author name not detected. ' +
-                        'The parser looks for the name as underlined text after "Curriculum Vitae" in the RTF header. ' +
-                        'Check that your file: (1) contains the text "Curriculum Vitae", and ' +
-                        '(2) has the author name formatted with RTF underline markup. ' +
-                        'If the name still does not appear, the file may use an unexpected header layout.'
-                    );
-                }
-
-                const totalPubs = (
-                    data.peerReviewed.length +
-                    data.peerReviewedReviews.length +
-                    data.nonPeerReviewed.length +
-                    data.contributionsCited.length +
-                    data.editorials.length +
-                    data.abstracts.length +
-                    data.altMedia.length
-                );
-
-                if (totalPubs === 0) {
-                    warnings.push(
-                        '⚠️ No publications or abstracts were found in the uploaded file. ' +
-                        'Possible causes: (1) The file does not follow the expected UPenn CV section naming ' +
-                        '(e.g., "Research Publications, Peer Reviewed"). ' +
-                        '(2) Section headers are not formatted with RTF underline markup. ' +
-                        '(3) The numbered list items are missing or use an unexpected format. ' +
-                        'Try uploading the original, unmodified RTF from the UPenn CV template.'
-                    );
-                } else if (data.peerReviewed.length === 0 && totalPubs > 0) {
-                    warnings.push(
-                        'ℹ️ No peer-reviewed publications were detected, but other content was found. ' +
-                        'Check that the section is titled exactly "Research Publications, Peer Reviewed".'
-                    );
-                }
-
-                if (warnings.length > 0) {
-                    showError(warnings.join('\n\n'), true);
-                } else {
-                    hideError();
-                }
-
-                renderDashboard(data);
-            } catch (err) {
-                showError('Error parsing RTF: ' + err.message);
-                console.error(err);
-            }
-        }
-
-        function loadExample() {
-            const data = getExampleData();
-            document.getElementById('faculty-year').value = 2023;
-            renderDashboard(data);
-        }
-
-        function showUploadView() {
-            document.getElementById('dashboard-view').style.display = 'none';
-            document.getElementById('upload-view').style.display = 'flex';
-        }
-
-        function showError(msg, isWarning = false) {
-            const el = document.getElementById('error-msg');
-            el.textContent = msg;
-            el.classList.toggle('warning', isWarning);
-            el.classList.add('visible');
-        }
-
-        function hideError() {
-            const el = document.getElementById('error-msg');
-            el.classList.remove('visible', 'warning');
-        }
-
-        // Chart.js defaults
-        Chart.defaults.color = '#64748b';
-        Chart.defaults.borderColor = '#e2e8f0';
-        Chart.defaults.font.family = "'Inter', sans-serif";
+        const MONTH_MAP = { january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12, jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12 };
+        const SECTION_ALIASES = [['education', 'Education', [/^Education:?$/i]], ['training', 'Postgraduate Training', [/^Postgraduate Training/i]], ['militaryService', 'Military Service', [/^Military Service:?$/i]], ['facultyAppointments', 'Faculty Appointments', [/^Faculty Appointments:?$/i]], ['hospitalAppointments', 'Hospital/Admin Appointments', [/^Hospital and\/or Administrative Appointments:?$/i]], ['otherAppointments', 'Other Appointments', [/^Other Appointments:?$/i]], ['certifications', 'Specialty Certification', [/^Specialty Certification:?$/i]], ['licensure', 'Licensure', [/^Licensure:?$/i]], ['awards', 'Awards/Honors', [/^Awards, Honors/i]], ['memberships', 'Memberships', [/^Memberships in Professional and Scientific Societies/i]], ['editorialPositions', 'Editorial Positions', [/^Editorial Positions:?$/i]], ['committees', 'Committees', [/^Academic and Institutional Committees:?$/i]], ['teaching', 'Teaching', [/^Major Academic and Clinical Teaching/i]], ['invitedLectures', 'Invited Lectures', [/^Lectures by Invitation/i, /^Invited Lectures/i, /^Invited Presentations/i]], ['organizingRoles', 'Organizing Roles', [/^Organizing Roles in Scientific Meetings:?$/i]], ['bibliography', 'Bibliography', [/^Bibliography:?$/i]], ['peerReviewed', 'Peer-reviewed Research', [/^Research Publications,\s*peer reviewed/i, /^Peer Reviewed Publications/i, /^Peer-Reviewed Original Research/i]], ['peerReviewedReviews', 'Peer-reviewed Reviews', [/^Research Publications,\s*peer-reviewed reviews/i, /^Peer-Reviewed Reviews/i]], ['contributionsCited', 'Contributions Cited', [/^Contributions to peer-reviewed research publications/i]], ['nonPeerReviewed', 'Non-peer Reviewed', [/^Research Publications,\s*non-peer reviewed/i]], ['abstracts', 'Abstracts', [/^Abstracts/i, /^Conference Abstracts/i, /^Scientific Abstracts/i]], ['editorials', 'Editorials/Reviews/Chapters', [/^Editorials, Reviews, Chapters/i]], ['books', 'Books', [/^Books:?$/i]], ['altMedia', 'Alternative Media', [/^Alternative Media:?$/i]], ['patents', 'Patents', [/^Patents:?$/i]]].map(x => ({ key: x[0], label: x[1], patterns: x[2] }));
+        const EXPECTED_CORE = ['education', 'training', 'facultyAppointments', 'awards', 'committees', 'teaching', 'invitedLectures', 'peerReviewed', 'peerReviewedReviews', 'abstracts', 'editorials', 'altMedia'];
+        let PARSED = null, barChartInstance = null, lineChartInstance = null, barFilterState = 'all';
+        function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+        function cleanLine(line) { return String(line || '').replace(/\bx\d+\b/g, ' ').replace(/\b(?:ltrrow|rtlrow|trowd|cell|row)\b/g, ' ').replace(/[ \t]+/g, ' ').trim(); }
+        function rtfToText(rtf) { let t = rtf; t = t.replace(/\\cell/g, '\t').replace(/\\row/g, '\n').replace(/\\par[d]?/g, '\n').replace(/\\line/g, '\n').replace(/\\tab/g, '\t'); t = t.replace(/\\u(-?\d+)\??/g, (_, code) => { let n = parseInt(code, 10); if (n < 0) n += 65536; return String.fromCharCode(n); }); const cp = { 0x91: '‘', 0x92: '’', 0x93: '“', 0x94: '”', 0x95: '•', 0x96: '–', 0x97: '—', 0xa0: ' ' }; t = t.replace(/\\'([0-9a-fA-F]{2})/g, (_, h) => { const b = parseInt(h, 16); return cp[b] || String.fromCharCode(b); }); t = t.replace(/\{\\\*[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g, ' '); t = t.replace(/\\[a-zA-Z]+-?\d* ?/g, ' ').replace(/\\[{}\\]/g, '').replace(/[{}]/g, ' '); t = t.replace(/[\u0007\u000b\ufff9\ufffa\ufffb]/g, '\n'); return t.split(/\n+/).map(cleanLine).filter(Boolean).join('\n'); }
+        function matchSectionLine(line) { for (const s of SECTION_ALIASES) { if (s.patterns.some(re => re.test(line.trim()))) return s; } return null; }
+        function splitSections(text) { const lines = text.split('\n'); const starts = []; lines.forEach((line, i) => { const s = matchSectionLine(line); if (s) starts.push({ key: s.key, label: s.label, title: line, line: i }); }); const sections = {}; starts.forEach((st, i) => { const end = i + 1 < starts.length ? starts[i + 1].line : lines.length; sections[st.key] = { ...st, text: lines.slice(st.line + 1, end).join('\n').trim() }; }); return { sections, starts }; }
+        function extractNumberedEntries(txt) { txt = (txt || '').trim(); if (!txt || /^\[?none\]?$/i.test(txt)) return []; const re = /(^|\n)\s*(\d+)\.\s+/g; const ms = [...txt.matchAll(re)]; return ms.map((m, i) => { const start = m.index + m[0].length, end = i + 1 < ms.length ? ms[i + 1].index : txt.length; return { number: +m[2], text: cleanLine(txt.slice(start, end).replace(/\n+/g, ' ')) }; }).filter(x => x.text && !/^\[?none\]?$/i.test(x.text)); }
+        function extractYearMonth(text) { const m = String(text).match(/\b(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*,?\s+(\d{4})\b/i); if (m) { const k = m[1].toLowerCase(); return { month: MONTH_MAP[k] || MONTH_MAP[k.slice(0, 4)] || MONTH_MAP[k.slice(0, 3)] || 1, year: +m[2] }; } const ys = [...String(text).matchAll(/\b(19\d{2}|20\d{2})\b/g)].map(x => +x[1]); return { month: 1, year: ys.length ? ys[ys.length - 1] : 2000 }; }
+        function toFiscalYear(year, month) { return month >= 7 ? year + 1 : year; } function fyLabel(fy, start) { const yr = fy - start + 1; return yr >= 1 ? `FY${String(fy).slice(-2)} (Yr ${yr})` : `FY${String(fy).slice(-2)}`; }
+        function detectNameFromText(text) { const lines = text.split('\n').filter(Boolean); const idx = lines.findIndex(l => /Curriculum Vitae/i.test(l)); if (idx >= 0) { for (let i = idx + 1; i < Math.min(idx + 12, lines.length); i++) { const l = lines[i]; if (/^Date:/i.test(l) || /^Address:/i.test(l)) continue; if (/\b(MD|DO|PhD|MBE|MSCE|MPH|MHS|MBA|RN)\b/i.test(l) || /^[A-Z][A-Za-z'\-]+\s+[A-Z][A-Za-z'\-]+/.test(l)) return l; } } return 'Unknown'; }
+        function detectLastName(name) { const w = String(name || '').split(',')[0].trim().split(/\s+/).filter(Boolean); return w.length ? w[w.length - 1] : ''; }
+        function detectFacultyYearFromText(sections) { const ys = [...(sections.facultyAppointments?.text || '').matchAll(/\b(19\d{2}|20\d{2})-present\b/gi)].map(x => +x[1]); return ys.length ? Math.min(...ys) : null; }
+        function splitTitleJournal(rest) { rest = cleanLine(rest); const m = rest.match(/^(.+?)\.\s+(.+)$/); if (!m) return { title: rest.slice(0, 180), journal: '' }; let j = m[2].trim(); j = j.replace(/\s+\d+\s*\(.+$/, '').replace(/\s+\d+[:(].+$/, '').replace(/,\s*(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec).+$/i, '').replace(/\s+Notes:.+$/i, '').trim(); return { title: m[1].trim(), journal: j }; }
+        function detectPosition(authors, lastName) { if (!authors || !lastName) return 'unknown'; const ln = lastName.toLowerCase(), primary = authors.split(';')[0].replace(/^[•\s]+/, '').trim(), parts = primary.split(',').map(x => x.trim()).filter(Boolean); if (!parts.length) return 'unknown'; if (parts[0].toLowerCase().includes(ln)) return 'first'; if (parts[parts.length - 1].toLowerCase().includes(ln)) return 'last'; if (primary.toLowerCase().includes(ln)) return 'middle'; return 'unknown'; }
+        function parseCitation(item, category, lastName) { const raw = cleanLine(item.text); const d = extractYearMonth(raw); let authors = '', rest = raw; const c = raw.indexOf(':'); if (c > 0 && c < 800) { authors = raw.slice(0, c).trim(); rest = raw.slice(c + 1).trim(); } const tj = splitTitleJournal(rest); return { number: item.number, raw, authors, title: tj.title || raw.slice(0, 160), journal: tj.journal, year: d.year, month: d.month, fiscalYear: toFiscalYear(d.year, d.month), position: detectPosition(authors, lastName), category }; }
+        function parseRows(txt) { return (txt || '').split('\n').map(cleanLine).filter(x => x && !/^\[?none\]?$/i.test(x)).map(raw => { const m = raw.match(/^(\d{4}-\d{4}|\d{4}-present|\d{4}|[A-Z][a-z]{2,9},?\s+\d{4})\s+(.+)$/i); return m ? { period: m[1], description: m[2], raw } : { period: '', description: raw, raw }; }); }
+        function parseEducation(txt) { return parseRows(txt).map(r => { const m = r.raw.match(/^(\d{4})\s+([A-Z]{2,8})\s+(.+)$/); return m ? { year: +m[1], degree: m[2], institution: m[3], raw: r.raw } : { year: parseInt(r.period) || null, degree: '', institution: r.description, raw: r.raw }; }); }
+        function parseTraining(txt) { return parseRows(txt).map(r => ({ period: r.period, role: r.description, raw: r.raw })); }
+        function parseAwards(txt) { return parseRows(txt).map(r => ({ year: parseInt(r.period) || null, title: r.description || r.raw, fiscalYear: parseInt(r.period) ? toFiscalYear(parseInt(r.period), 1) : null, raw: r.raw })).sort((a, b) => (b.year || 0) - (a.year || 0)); }
+        function parseLectures(txt) { return parseRows(txt).map(r => { const m = r.raw.match(/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*,?\s+(\d{4})\s+(.+)$/i); if (!m) return null; const k = m[1].toLowerCase(), mo = MONTH_MAP[k] || MONTH_MAP[k.slice(0, 4)] || MONTH_MAP[k.slice(0, 3)] || 1, year = +m[2], venue = m[3], tm = venue.match(/^"([^"]+)"/); return { date: `${m[1]} ${year}`, year, month: mo, fiscalYear: toFiscalYear(year, mo), title: tm ? tm[1] : venue.split(',')[0].replace(/^"|"$/g, ''), venue, raw: r.raw }; }).filter(Boolean); }
+        function parseRTF(rtfContent, facultyStartYear, lastNameOverride) { const text = rtfToText(rtfContent); const { sections, starts } = splitSections(text); const name = detectNameFromText(text); const lastName = lastNameOverride || detectLastName(name); const fac = facultyStartYear || detectFacultyYearFromText(sections) || 2023; function bib(k) { return extractNumberedEntries(sections[k]?.text || '').map(it => parseCitation(it, k, lastName)); } const data = { name, lastName, facultyStartYear: fac, facultyStartFY: toFiscalYear(fac, 7), normalizedText: text, education: parseEducation(sections.education?.text || ''), training: parseTraining(sections.training?.text || ''), facultyAppointments: parseRows(sections.facultyAppointments?.text || ''), hospitalAppointments: parseRows(sections.hospitalAppointments?.text || ''), otherAppointments: parseRows(sections.otherAppointments?.text || ''), certifications: parseRows(sections.certifications?.text || ''), licensure: parseRows(sections.licensure?.text || ''), awards: parseAwards(sections.awards?.text || ''), memberships: parseRows(sections.memberships?.text || ''), editorialPositions: parseRows(sections.editorialPositions?.text || ''), committees: parseRows(sections.committees?.text || ''), teaching: parseRows(sections.teaching?.text || ''), lectures: parseLectures(sections.invitedLectures?.text || ''), organizingRoles: parseRows(sections.organizingRoles?.text || ''), peerReviewed: bib('peerReviewed'), peerReviewedReviews: bib('peerReviewedReviews'), contributionsCited: bib('contributionsCited'), nonPeerReviewed: bib('nonPeerReviewed'), abstracts: bib('abstracts'), editorials: bib('editorials'), books: bib('books'), altMedia: bib('altMedia'), patents: bib('patents') }; data.committeeCount = data.committees.filter(x => /^\d{4}/.test(x.period)).length; buildDiagnostics(data, starts); return data; }
+        function buildDiagnostics(data, starts) { const total = data.peerReviewed.length + data.peerReviewedReviews.length + data.nonPeerReviewed.length + data.contributionsCited.length + data.abstracts.length + data.editorials.length + data.books.length + data.altMedia.length + data.patents.length; const found = starts.map(s => s.key); const warnings = []; if (data.name === 'Unknown') warnings.push('Name not detected.'); if (!data.lastName || data.lastName === 'Unknown') warnings.push('Last name not detected; author roles may be inaccurate.'); if (total === 0) warnings.push('No numbered bibliography entries detected.');['peerReviewed', 'peerReviewedReviews', 'abstracts', 'editorials', 'altMedia'].forEach(k => { const noY = data[k].filter(x => x.year === 2000).length; if (noY) warnings.push(`${noY} ${k} entries lacked clear year.`); }); let score = 0; if (data.name !== 'Unknown') score += 10; if (data.facultyStartYear) score += 10; if (starts.length >= 8) score += 20; if (data.peerReviewed.length) score += 30; if (data.abstracts.length) score += 10; if (data.lectures.length) score += 10; if (data.education.length || data.training.length) score += 10; if (data.committees.length || data.teaching.length) score += 10; data.diagnostics = { parserUsed: 'FEDS text-first parser', score, sectionsDetected: starts.map(s => s.title), sectionsMissing: EXPECTED_CORE.filter(k => !found.includes(k)), warnings, rawTextPreview: data.normalizedText.slice(0, 30000) }; }
+        function countingItems(data) { return [...data.peerReviewed, ...data.peerReviewedReviews, ...data.nonPeerReviewed, ...data.contributionsCited, ...data.editorials]; }
+        function allFYsFor(data) { return [...new Set([...countingItems(data), ...data.abstracts, ...data.altMedia, ...data.lectures].map(x => x.fiscalYear).filter(Boolean))].sort((a, b) => a - b); }
+        function renderDashboard(data) { PARSED = data; const fsFY = data.facultyStartFY; document.getElementById('dash-name').textContent = data.name; document.getElementById('dash-institution').textContent = 'Academic CV Dashboard'; document.getElementById('parse-summary').textContent = `${data.diagnostics.parserUsed} · score ${data.diagnostics.score}/100 · ${data.diagnostics.sectionsDetected.length} sections detected`; const counting = countingItems(data); const prItems = [...data.peerReviewed, ...data.peerReviewedReviews, ...data.nonPeerReviewed]; const currentFY = toFiscalYear(new Date().getFullYear(), new Date().getMonth() + 1); const stats = [{ n: counting.length, label: 'Scholarly<br>Works' }, { n: data.peerReviewed.length, label: 'PR Research<br>Publications' }, { n: prItems.filter(p => p.position === 'first').length, label: 'First Author<br>Publications' }, { n: prItems.filter(p => p.position === 'last').length, label: 'Senior Author<br>Publications' }, { n: data.abstracts.length, label: 'Conference<br>Abstracts' }, { n: Math.max(currentFY - fsFY + 1, 0), label: 'Years<br>at Rank' }]; document.getElementById('stats-row').innerHTML = stats.map(s => `<div class="stat-card"><div class="stat-number">${s.n}</div><div class="stat-label">${s.label}</div></div>`).join(''); const allFYs = allFYsFor(data); renderBarFilter(); renderBarChart(prItems, allFYs, fsFY, barFilterState); document.getElementById('bar-chart-footnote').textContent = 'Denominator: peer-reviewed research publications + peer-reviewed reviews + non-peer-reviewed publications.'; renderLineChart(data, allFYs, fsFY); renderHeatmap(data, allFYs, fsFY); renderYearSelector(data, allFYs, fsFY); renderPubList(data.peerReviewed, 'pub', fsFY); renderPubTabs(data.peerReviewed, 'pub'); renderPubList(data.abstracts, 'abs', fsFY); renderPubTabs(data.abstracts, 'abs'); renderTimeline(data); renderLectures(data.lectures, fsFY); renderExtraSections(data); renderDiagnostics(data); document.getElementById('upload-view').style.display = 'none'; document.getElementById('dashboard-view').style.display = 'block'; }
+        function chartAvailable() { return typeof Chart !== 'undefined'; }
+        function renderBarFilter() { document.getElementById('bar-filter').innerHTML = ['all', 'first', 'middle', 'last', 'unknown'].map(f => `<button class="filter-btn ${f === barFilterState ? 'active' : ''}" onclick="filterBar('${f}')">${f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join(''); }
+        function renderBarChart(prItems, allFYs, fsFY, filter) { const fys = allFYs.filter(fy => prItems.some(p => p.fiscalYear === fy)); if (!chartAvailable()) { document.getElementById('barChart').outerHTML = '<div class="no-results">Chart.js did not load.</div>'; return; } const ctx = document.getElementById('barChart').getContext('2d'); const labels = fys.map(fy => fyLabel(fy, fsFY)); const colors = { first: ['#059669cc', '#059669', 'First Author'], middle: ['#d97706cc', '#d97706', 'Middle Author'], last: ['#7c3aedcc', '#7c3aed', 'Last Author'], unknown: ['#94a3b8cc', '#94a3b8', 'Unknown'] }; const datasets = [];['first', 'middle', 'last', 'unknown'].forEach(role => { if (filter !== 'all' && filter !== role) return; datasets.push({ label: colors[role][2], data: fys.map(fy => prItems.filter(p => p.fiscalYear === fy && p.position === role).length), backgroundColor: colors[role][0], borderColor: colors[role][1], borderWidth: 1, borderRadius: 4 }); }); if (barChartInstance) barChartInstance.destroy(); barChartInstance = new Chart(ctx, { type: 'bar', data: { labels, datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, font: { size: 11, family: 'Inter' } } }, tooltip: { enabled: true } } } }); }
+        function filterBar(f) { barFilterState = f; renderBarFilter(); const prItems = [...PARSED.peerReviewed, ...PARSED.peerReviewedReviews, ...PARSED.nonPeerReviewed]; renderBarChart(prItems, allFYsFor(PARSED), PARSED.facultyStartFY, f); }
+        function renderLineChart(data, allFYs, fsFY) { if (!chartAvailable()) { document.getElementById('lineChart').outerHTML = '<div class="no-results">Chart.js did not load.</div>'; return; } const ctx = document.getElementById('lineChart').getContext('2d'); const labels = allFYs.map(fy => fyLabel(fy, fsFY)); const cats = [{ key: 'peerReviewed', label: 'PR Research', color: '#2563eb' }, { key: 'peerReviewedReviews', label: 'PR Reviews', color: '#0891b2' }, { key: 'nonPeerReviewed', label: 'Non-PR', color: '#059669' }, { key: 'contributionsCited', label: 'Cited not author', color: '#d97706' }, { key: 'editorials', label: 'Editorials/Reviews/Chapters', color: '#be185d' }]; const all = countingItems(data); let cumTotal = 0; const datasets = [{ label: 'Total Scholarly Works', data: allFYs.map(fy => { cumTotal += all.filter(p => p.fiscalYear === fy).length; return cumTotal; }), borderColor: '#2563eb', backgroundColor: '#2563eb20', fill: true, tension: .3, pointRadius: 4, borderWidth: 2.5 }]; cats.forEach(cat => { const items = data[cat.key] || []; if (!items.length) return; let cum = 0; datasets.push({ label: cat.label, data: allFYs.map(fy => { cum += items.filter(p => p.fiscalYear === fy).length; return cum; }), borderColor: cat.color, backgroundColor: 'transparent', tension: .3, pointRadius: 3, borderWidth: 1.5, borderDash: [5, 3] }); }); if (lineChartInstance) lineChartInstance.destroy(); lineChartInstance = new Chart(ctx, { type: 'line', data: { labels, datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { stepSize: 2 } } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, font: { size: 11, family: 'Inter' } } }, tooltip: { enabled: true } } } }); }
+        function renderHeatmap(data, allFYs, fsFY) { const cats = [{ label: 'PR Research', items: data.peerReviewed }, { label: 'PR Reviews', items: data.peerReviewedReviews }, { label: 'Editorials/Chapters', items: data.editorials }, { label: 'Abstracts', items: data.abstracts }, { label: 'Alt Media', items: data.altMedia }, { label: 'Invited Lectures', items: data.lectures }]; const rows = allFYs.map(fy => ({ label: fyLabel(fy, fsFY), values: cats.map(c => (c.items || []).filter(i => i.fiscalYear === fy).length) })); const maxVal = Math.max(1, ...rows.flatMap(r => r.values)); function cellColor(v) { if (v === 0) return '#f1f5f9'; const t = v / maxVal; return `rgb(${Math.round(219 - t * 180)},${Math.round(234 - t * 120)},${Math.round(254 - t * 20)})`; } let html = '<table class="heatmap-table"><thead><tr><th></th>' + cats.map(c => `<th>${esc(c.label)}</th>`).join('') + '</tr></thead><tbody>'; rows.forEach(r => { html += `<tr><td>${r.label}</td>`; r.values.forEach(v => { html += `<td class="heatmap-cell" title="${v}" style="background:${cellColor(v)};color:${v >= maxVal * .6 ? '#fff' : '#1e293b'}">${v}</td>`; }); html += '</tr>'; }); document.getElementById('heatmap-container').innerHTML = html + '</tbody></table>'; }
+        function renderYearSelector(data, allFYs, fsFY) { document.getElementById('year-selector').innerHTML = allFYs.map(fy => `<button class="year-btn" data-fy="${fy}" onclick="showYearDetail(${fy})">${fyLabel(fy, fsFY)}</button>`).join(''); if (allFYs.length) showYearDetail(allFYs[allFYs.length - 1]); }
+        function showYearDetail(fy) { const data = PARSED, fsFY = data.facultyStartFY; document.querySelectorAll('.year-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.fy) === fy)); const groups = [{ label: '📄 PR Research Publications', items: data.peerReviewed.filter(p => p.fiscalYear === fy), color: 'var(--accent)' }, { label: '📘 PR Reviews', items: data.peerReviewedReviews.filter(p => p.fiscalYear === fy), color: 'var(--color-lecture)' }, { label: '✏️ Editorials/Reviews/Chapters', items: data.editorials.filter(p => p.fiscalYear === fy), color: 'var(--color-editorial)' }, { label: '📋 Conference Abstracts', items: data.abstracts.filter(a => a.fiscalYear === fy), color: 'var(--color-last)' }, { label: '🌐 Alternative Media', items: data.altMedia.filter(a => a.fiscalYear === fy), color: 'var(--color-first)' }, { label: '🎤 Invited Lectures', items: data.lectures.filter(l => l.fiscalYear === fy), color: 'var(--color-lecture)' }]; const total = groups.reduce((s, g) => s + g.items.length, 0); document.getElementById('fy-detail-badge').textContent = `${total} items in ${fyLabel(fy, fsFY)}`; let html = ''; groups.forEach(g => { if (!g.items.length) return; html += `<div class="section-heading fade-in" style="color:${g.color}">${g.label} (${g.items.length})</div>` + g.items.map(item => pubItemHTML(item, fsFY, false)).join(''); }); document.getElementById('year-detail-content').innerHTML = html || '<div class="no-results">No academic output recorded for this fiscal year.</div>'; }
+        function pubItemHTML(p, fsFY, includeNumber = true) { return `<div class="pub-item fade-in" data-pos="${esc(p.position || '')}"><div class="pub-title">${includeNumber && p.number ? `${p.number}. ` : ''}${esc(p.title || p.raw || 'Untitled')}</div><div class="pub-meta"><span class="pub-journal">${esc(p.journal || p.venue || '')}</span>${p.fiscalYear ? `<span>${fyLabel(p.fiscalYear, fsFY)}</span>` : ''}${p.position ? `<span class="author-badge ${esc(p.position)}">${esc(p.position)} author</span>` : ''}</div></div>`; }
+        function renderPubList(items, prefix, fsFY) { const sorted = [...items].sort((a, b) => b.fiscalYear - a.fiscalYear || b.number - a.number); document.getElementById(`${prefix}-list`).innerHTML = sorted.map(p => pubItemHTML(p, fsFY, true)).join('') || '<div class="no-results">None detected.</div>'; }
+        function renderPubTabs(items, prefix) { const counts = { all: items.length, first: 0, middle: 0, last: 0, unknown: 0 }; items.forEach(p => { if (counts[p.position] !== undefined) counts[p.position]++; }); document.getElementById(`${prefix}-tabs`).innerHTML = ['all', 'first', 'middle', 'last', 'unknown'].map(f => `<button class="filter-btn ${f === 'all' ? 'active' : ''}" onclick="filterPubList('${prefix}','${f}')">${f.charAt(0).toUpperCase() + f.slice(1)} (${counts[f] || 0})</button>`).join(''); }
+        function filterPubList(prefix, filter) { document.querySelectorAll(`#${prefix}-tabs .filter-btn`).forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().startsWith(filter))); document.querySelectorAll(`#${prefix}-list .pub-item`).forEach(el => { el.style.display = (filter === 'all' || el.dataset.pos === filter) ? '' : 'none'; }); }
+        function renderTimeline(data) { const items = [...data.education.map(e => ({ year: e.year || 9999, title: `${e.degree ? e.degree + ' — ' : ''}${e.institution || e.raw}` })), ...data.training.map(t => ({ year: parseInt(t.period) || 9999, title: `${t.role || t.raw} ${t.period ? `(${t.period})` : ''}` })), { year: data.facultyStartYear, title: `Faculty Appointment (${data.facultyStartYear}–present)` }].sort((a, b) => a.year - b.year); document.getElementById('timeline').innerHTML = items.map(i => `<div class="timeline-item"><div class="tl-year">${i.year === 9999 ? '' : i.year}</div><div class="tl-title">${esc(i.title)}</div></div>`).join('') || '<div class="no-results">None detected.</div>'; }
+        function renderLectures(lectures, fsFY) { const sorted = [...lectures].sort((a, b) => b.fiscalYear - a.fiscalYear || b.month - a.month); document.getElementById('lecture-list').innerHTML = sorted.map(l => `<div class="pub-item"><div class="pub-title">${esc(l.title)}</div><div class="pub-meta"><span class="pub-journal">${esc(l.venue)}</span><span>${esc(l.date)}</span><span style="color:var(--text-muted)">${fyLabel(l.fiscalYear, fsFY)}</span></div></div>`).join('') || '<div class="no-results">None detected.</div>'; }
+        function miniSection(title, items, formatter) { if (!items || !items.length) return ''; return `<div class="card" style="margin-bottom:0"><div class="card-title" style="margin-bottom:8px">${esc(title)} <span class="fy-badge">${items.length}</span></div><div class="mini-list">${items.map(formatter).join('')}</div></div>`; }
+        function rowFmt(r) { return `<div class="mini-item"><div class="mini-meta">${esc(r.period || r.year || '')}</div>${esc(r.description || r.title || r.role || r.raw || '')}</div>`; }
+        function renderExtraSections(data) { const html = [miniSection('Awards & Honors', data.awards, rowFmt), miniSection('Faculty Appointments', data.facultyAppointments, rowFmt), miniSection('Hospital/Admin Appointments', data.hospitalAppointments, rowFmt), miniSection('Other Appointments', data.otherAppointments, rowFmt), miniSection('Certifications', data.certifications, rowFmt), miniSection('Licensure', data.licensure, rowFmt), miniSection('Memberships', data.memberships, rowFmt), miniSection('Editorial Positions', data.editorialPositions, rowFmt), miniSection('Committees', data.committees, rowFmt), miniSection('Teaching', data.teaching, rowFmt), miniSection('Organizing Roles', data.organizingRoles, rowFmt), miniSection('Books', data.books, r => pubItemHTML(r, data.facultyStartFY, true)), miniSection('Patents', data.patents, r => pubItemHTML(r, data.facultyStartFY, true))].filter(Boolean).join(''); document.getElementById('extra-sections').innerHTML = html || '<div class="no-results">No additional sections detected.</div>'; }
+        function renderDiagnostics(data) { const d = data.diagnostics; const vals = [['Parser', d.parserUsed], ['Score', `${d.score}/100`], ['Sections', d.sectionsDetected.length], ['Name', data.name], ['Last name', data.lastName], ['Faculty start', data.facultyStartYear], ['PR research', data.peerReviewed.length], ['PR reviews', data.peerReviewedReviews.length], ['Abstracts', data.abstracts.length], ['Editorials', data.editorials.length], ['Alt media', data.altMedia.length], ['Lectures', data.lectures.length]]; let html = '<div class="diag-grid">' + vals.map(c => `<div class="diag-pill"><b>${esc(c[0])}</b>${esc(c[1])}</div>`).join('') + '</div>'; if (d.warnings.length) html += `<div class="error-msg warning visible">${esc(d.warnings.join('\n'))}</div>`; if (d.sectionsMissing.length) html += `<p class="help-text"><b>Expected sections not detected:</b> ${esc(d.sectionsMissing.join(', '))}</p>`; html += `<p class="help-text"><b>Detected section headers:</b> ${esc(d.sectionsDetected.join(' · '))}</p>`; document.getElementById('diagnostics').innerHTML = html; document.getElementById('raw-preview').textContent = d.rawTextPreview; }
+        function getExampleData() { const r = `{\\rtf1 Curriculum Vitae\\par Christie Glau, MD\\par Faculty Appointments:\\par 2018-present Assistant Professor\\par Research Publications, peer reviewed (print or other media):\\par 1. Glau CL, Conlon TW: Progressive diaphragm atrophy in pediatric acute respiratory failure. Pediatric Critical Care Medicine 19(5): 406-411, May 2018.\\par Abstracts (Last 3 years):\\par 1. Glau CL: Hemodynamic POCUS. Critical Care Medicine 52(1): S422, January 2024.}`; return parseRTF(r, null, null); }
+        let uploadedCVs = [], selectedCVIndex = -1; document.getElementById('dropzone').addEventListener('dragover', e => { e.preventDefault(); e.currentTarget.classList.add('dragover'); }); document.getElementById('dropzone').addEventListener('dragleave', e => e.currentTarget.classList.remove('dragover')); document.getElementById('dropzone').addEventListener('drop', e => { e.preventDefault(); e.currentTarget.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); }); document.getElementById('file-input').addEventListener('change', e => { if (e.target.files.length) handleFiles(e.target.files); });
+        function handleFiles(fileList) { for (const file of fileList) { if (!file.name.toLowerCase().endsWith('.rtf')) { showError(`Skipped "${file.name}" — only .rtf files are supported.`); continue; } if (uploadedCVs.some(cv => cv.name === file.name)) continue; const reader = new FileReader(); reader.onload = () => { uploadedCVs.push({ name: file.name, content: reader.result }); selectedCVIndex = uploadedCVs.length - 1; renderCVSelector(); document.getElementById('btn-generate').disabled = false; hideError(); }; reader.readAsText(file, 'windows-1252'); } }
+        function renderCVSelector() { const area = document.getElementById('cv-selector-area'), list = document.getElementById('cv-file-list'); if (!uploadedCVs.length) { area.style.display = 'none'; return; } area.style.display = 'block'; list.innerHTML = uploadedCVs.map((cv, i) => `<li class="cv-file-item ${i === selectedCVIndex ? 'selected' : ''}" onclick="selectCV(${i})"><span class="file-name">📎 ${esc(cv.name)}</span><button class="remove-btn" onclick="event.stopPropagation(); removeCV(${i})" title="Remove">✕</button></li>`).join(''); }
+        function selectCV(index) { selectedCVIndex = index; renderCVSelector(); } function removeCV(index) { uploadedCVs.splice(index, 1); if (selectedCVIndex >= uploadedCVs.length) selectedCVIndex = uploadedCVs.length - 1; renderCVSelector(); if (!uploadedCVs.length) document.getElementById('btn-generate').disabled = true; }
+        function generateDashboard() { if (selectedCVIndex < 0 || selectedCVIndex >= uploadedCVs.length) { showError('Please select a CV to review.'); return; } try { const facYear = parseInt(document.getElementById('faculty-year').value) || null; const lastOverride = document.getElementById('last-name-override').value.trim() || null; const data = parseRTF(uploadedCVs[selectedCVIndex].content, facYear, lastOverride); const total = data.peerReviewed.length + data.peerReviewedReviews.length + data.nonPeerReviewed.length + data.contributionsCited.length + data.editorials.length + data.abstracts.length + data.books.length + data.altMedia.length + data.patents.length; if (data.diagnostics.score < 30 || total === 0) { showError('The CV was read, but parsing confidence is low. No dashboard was rendered to avoid misleading zeroes. See console for parsed diagnostics.'); console.log(data); return; } barFilterState = 'all'; if (data.diagnostics.warnings.length) showError(data.diagnostics.warnings.join('\n\n'), true); else hideError(); renderDashboard(data); } catch (err) { showError('Error parsing RTF: ' + err.message); console.error(err); } }
+        function loadExample() { barFilterState = 'all'; renderDashboard(getExampleData()); }
+        function showUploadView() { document.getElementById('dashboard-view').style.display = 'none'; document.getElementById('upload-view').style.display = 'flex'; }
+        function showError(msg, isWarning = false) { const el = document.getElementById('error-msg'); el.textContent = msg; el.classList.toggle('warning', isWarning); el.classList.add('visible'); }
+        function hideError() { document.getElementById('error-msg').classList.remove('visible', 'warning'); }
+        if (typeof Chart !== 'undefined') { Chart.defaults.color = '#64748b'; Chart.defaults.borderColor = '#e2e8f0'; Chart.defaults.font.family = "'Inter', sans-serif"; }
     </script>
 </body>
 

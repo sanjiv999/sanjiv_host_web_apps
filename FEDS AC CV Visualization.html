@@ -1,0 +1,2990 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Clinician (AC) CV Dashboard — Penn Medicine</title>
+    <meta name="description"
+        content="Interactive Academic Clinician (AC) Track CV dashboard for UPenn/FEDS RTF CVs — track teaching, invited talks, committees, scholarly output, and Area of Concentration (AoC) impact.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-page: #f4f6fb;
+            --bg-card: #ffffff;
+            --bg-card-alt: #f8fafc;
+            --accent: #0f4c81;
+            --accent-light: #2563eb;
+            --accent-lighter: #dbeafe;
+            --accent-dark: #0a355c;
+            --penn-red: #990000;
+            --penn-blue: #011f5b;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --text-on-accent: #ffffff;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, .07);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, .1);
+
+            /* AC Core Pillar Colors */
+            --color-teaching: #059669;
+            --color-teaching-bg: #d1fae5;
+            --color-talks: #0891b2;
+            --color-talks-bg: #cffafe;
+            --color-committees: #7c3aed;
+            --color-committees-bg: #ede9fe;
+            --color-pubs: #2563eb;
+            --color-pubs-bg: #dbeafe;
+            --color-abstracts: #d97706;
+            --color-abstracts-bg: #fef3c7;
+            --color-award: #dc2626;
+            --color-editorial: #be185d;
+
+            /* AoC Colors */
+            --aoc1-color: #0d9488;
+            --aoc1-bg: #ccfbf1;
+            --aoc1-border: #5eead4;
+            --aoc2-color: #7c3aed;
+            --aoc2-bg: #ede9fe;
+            --aoc2-border: #c4b5fd;
+            --aoc3-color: #d97706;
+            --aoc3-bg: #fef3c7;
+            --aoc3-border: #fcd34d;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        /* CSS Custom Highlight API styles for AoC text matches */
+        ::highlight(aoc-1) {
+            background-color: #99f6e4;
+            color: #0f172a;
+            text-decoration: underline #0d9488 2px;
+        }
+
+        ::highlight(aoc-2) {
+            background-color: #ddd6fe;
+            color: #0f172a;
+            text-decoration: underline #7c3aed 2px;
+        }
+
+        ::highlight(aoc-3) {
+            background-color: #fde68a;
+            color: #0f172a;
+            text-decoration: underline #d97706 2px;
+        }
+
+        mark.aoc-mark-1 {
+            background-color: #99f6e4;
+            color: #0f172a;
+            padding: 0 2px;
+            border-radius: 3px;
+            border-bottom: 2px solid #0d9488;
+        }
+
+        mark.aoc-mark-2 {
+            background-color: #ddd6fe;
+            color: #0f172a;
+            padding: 0 2px;
+            border-radius: 3px;
+            border-bottom: 2px solid #7c3aed;
+        }
+
+        mark.aoc-mark-3 {
+            background-color: #fde68a;
+            color: #0f172a;
+            padding: 0 2px;
+            border-radius: 3px;
+            border-bottom: 2px solid #d97706;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ===== UPLOAD VIEW ===== */
+        #upload-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .upload-container {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            max-width: 760px;
+            width: 100%;
+            padding: 42px 38px;
+            text-align: center;
+            border-top: 6px solid var(--penn-blue);
+        }
+
+        .track-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: var(--penn-blue);
+            font-size: .75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: 10px;
+        }
+
+        .upload-container h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: var(--penn-blue);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: .9rem;
+            margin-bottom: 24px;
+        }
+
+        .dropzone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            cursor: pointer;
+            transition: all .2s;
+            background: var(--bg-card-alt);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .dropzone:hover,
+        .dropzone.dragover {
+            border-color: var(--accent-light);
+            background: var(--accent-lighter);
+        }
+
+        .dropzone svg {
+            width: 44px;
+            height: 44px;
+            color: var(--accent-light);
+            margin-bottom: 10px;
+        }
+
+        .dropzone h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .dropzone p {
+            font-size: .82rem;
+            color: var(--text-muted);
+        }
+
+        .dropzone input[type=file] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* AoC Setup Box on Upload View */
+        .aoc-setup-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .aoc-setup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .aoc-setup-header h3 {
+            font-size: .92rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .aoc-setup-desc {
+            font-size: .78rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .aoc-inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .aoc-input-row {
+            display: grid;
+            grid-template-columns: 95px 1fr 1.1fr;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .aoc-badge-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            font-size: .75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .aoc-badge-1 {
+            background: var(--aoc1-bg);
+            color: var(--aoc1-color);
+            border: 1px solid var(--aoc1-border);
+        }
+
+        .aoc-badge-2 {
+            background: var(--aoc2-bg);
+            color: var(--aoc2-color);
+            border: 1px solid var(--aoc2-border);
+        }
+
+        .aoc-badge-3 {
+            background: var(--aoc3-bg);
+            color: var(--aoc3-color);
+            border: 1px solid var(--aoc3-border);
+        }
+
+        .aoc-input-row input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: .84rem;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: #fff;
+        }
+
+        .aoc-input-row input:focus {
+            outline: 2px solid var(--accent-light);
+            border-color: transparent;
+        }
+
+        .aoc-presets {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .aoc-presets span {
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .preset-chip {
+            font-size: .71rem;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .preset-chip:hover {
+            border-color: var(--accent-light);
+            color: var(--accent-light);
+            background: #eff6ff;
+        }
+
+        .settings-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .settings-group {
+            text-align: left;
+        }
+
+        .settings-group label {
+            display: block;
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .settings-group input,
+        .settings-group select {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: .86rem;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: #fff;
+        }
+
+        .help-text {
+            font-size: .71rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: .88rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all .2s;
+            border: none;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--penn-blue);
+            color: var(--text-on-accent);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card-alt);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .upload-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .error-msg {
+            color: var(--color-award);
+            font-size: .82rem;
+            margin-top: 12px;
+            display: none;
+            text-align: left;
+            white-space: pre-wrap;
+            background: #fff5f5;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            line-height: 1.6;
+        }
+
+        .error-msg.warning {
+            color: #92400e;
+            background: #fffbeb;
+            border-color: #fcd34d;
+        }
+
+        .error-msg.visible {
+            display: block;
+        }
+
+        .cv-selector-area {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .cv-selector-area h4 {
+            font-size: .84rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .cv-file-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cv-file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 6px;
+            font-size: .82rem;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .cv-file-item:hover,
+        .cv-file-item.selected {
+            border-color: var(--accent-light);
+            background: var(--accent-lighter);
+        }
+
+        .cv-file-item.selected {
+            font-weight: 700;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 4px;
+        }
+
+        .remove-btn:hover {
+            color: var(--color-award);
+        }
+
+        /* ===== DASHBOARD VIEW ===== */
+        #dashboard-view {
+            display: none;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .dash-header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top: 5px solid var(--penn-blue);
+            border-radius: var(--radius-lg);
+            padding: 28px 28px 22px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .dash-header h1 {
+            font-size: 1.95rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            color: var(--penn-blue);
+        }
+
+        .dash-header .subtitle {
+            font-size: .92rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .institution {
+            font-size: .8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .header-meta-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .meta-pill {
+            font-size: .76rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .header-actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-sm {
+            padding: 7px 14px;
+            font-size: .78rem;
+        }
+
+        /* ===== ROW 1: 4 PRIMARY AC HEADER COUNTS ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 22px 18px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all .2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1.05;
+        }
+
+        .stat-label {
+            font-size: .76rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-top: 8px;
+        }
+
+        .stat-sub {
+            font-size: .72rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .stat-card.stat-teaching::before {
+            background: var(--color-teaching);
+        }
+
+        .stat-card.stat-teaching .stat-number {
+            color: var(--color-teaching);
+        }
+
+        .stat-card.stat-talks::before {
+            background: var(--color-talks);
+        }
+
+        .stat-card.stat-talks .stat-number {
+            color: var(--color-talks);
+        }
+
+        .stat-card.stat-committees::before {
+            background: var(--color-committees);
+        }
+
+        .stat-card.stat-committees .stat-number {
+            color: var(--color-committees);
+        }
+
+        .stat-card.stat-pubs::before {
+            background: var(--color-pubs);
+        }
+
+        .stat-card.stat-pubs .stat-number {
+            color: var(--color-pubs);
+        }
+
+        /* ===== AOC CONTROL BAR & V2.0 EVIDENCE EXTRACTOR ===== */
+        .aoc-bar-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #cbd5e1;
+            border-left: 5px solid var(--aoc1-color);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .aoc-bar-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .aoc-bar-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .v2-badge {
+            font-size: .68rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #ccfbf1;
+            color: #0f766e;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .aoc-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .aoc-summary-card {
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            background: #fff;
+            border: 1px solid var(--border);
+            transition: all .15s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .aoc-summary-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .aoc-summary-card.active-filter {
+            box-shadow: 0 0 0 2px var(--penn-blue);
+        }
+
+        .aoc-summary-card.aoc-1 {
+            border-top: 4px solid var(--aoc1-color);
+        }
+
+        .aoc-summary-card.aoc-2 {
+            border-top: 4px solid var(--aoc2-color);
+        }
+
+        .aoc-summary-card.aoc-3 {
+            border-top: 4px solid var(--aoc3-color);
+        }
+
+        .aoc-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+
+        .aoc-card-name {
+            font-size: .88rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .aoc-card-count {
+            font-size: 1.1rem;
+            font-weight: 900;
+        }
+
+        .aoc-card-keywords {
+            font-size: .72rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            line-height: 1.35;
+        }
+
+        .aoc-Select-Breakdown {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .aoc-mini-stat {
+            font-size: .68rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: var(--bg-card-alt);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .aoc-inline-editor {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .aoc-inline-editor.open {
+            display: block;
+        }
+
+        /* ===== GENERAL CARDS & TABLES ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 1.02rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .aoc-cards-grid,
+            .three-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .two-col,
+            .settings-row,
+            .aoc-input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            #dashboard-view {
+                padding: 12px;
+            }
+        }
+
+        /* ===== OVER TIME & IN TOTAL MATRIX TABLE ===== */
+        .table-scroll {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 3px;
+            min-width: 680px;
+        }
+
+        .matrix-table th {
+            font-size: .72rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+            padding: 8px 6px;
+            text-align: center;
+            background: var(--bg-card-alt);
+            border-radius: 6px;
+        }
+
+        .matrix-table th:first-child {
+            text-align: left;
+            padding-left: 12px;
+            min-width: 240px;
+        }
+
+        .matrix-table td {
+            text-align: center;
+            padding: 8px 6px;
+            border-radius: 6px;
+            font-size: .8rem;
+            font-weight: 700;
+            transition: transform .12s;
+        }
+
+        .matrix-table td:first-child {
+            text-align: left;
+            padding-left: 12px;
+            color: var(--text-primary);
+            background: var(--bg-card-alt);
+            font-weight: 700;
+        }
+
+        .matrix-table tr.sub-row td:first-child {
+            padding-left: 28px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: .76rem;
+            background: #fcfcfd;
+        }
+
+        .matrix-table tr.group-header-row td:first-child {
+            font-weight: 800;
+            color: var(--penn-blue);
+            background: #eff6ff;
+        }
+
+        .matrix-table td.total-col,
+        .matrix-table th.total-col {
+            font-weight: 900;
+            background: #e2e8f0;
+            color: var(--penn-blue);
+            border-left: 2px solid #cbd5e1;
+        }
+
+        .matrix-cell:hover {
+            transform: scale(1.08);
+        }
+
+        .chart-wrap {
+            position: relative;
+            width: 100%;
+            height: 320px;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn,
+        .tab-btn,
+        .year-btn {
+            padding: 6px 13px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: .76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .15s;
+            font-family: inherit;
+        }
+
+        .filter-btn:hover,
+        .tab-btn:hover,
+        .year-btn:hover {
+            border-color: var(--accent-light);
+            color: var(--accent-light);
+        }
+
+        .filter-btn.active,
+        .tab-btn.active,
+        .year-btn.active {
+            background: var(--penn-blue);
+            border-color: var(--penn-blue);
+            color: var(--text-on-accent);
+        }
+
+        .item-list {
+            max-height: 440px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .item-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .item-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .cv-entry-item {
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 6px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: all .15s;
+        }
+
+        .cv-entry-item:hover {
+            background: var(--bg-card-alt);
+            border-color: #cbd5e1;
+        }
+
+        .cv-entry-item.aoc-matched-1 {
+            border-left: 4px solid var(--aoc1-color);
+        }
+
+        .cv-entry-item.aoc-matched-2 {
+            border-left: 4px solid var(--aoc2-color);
+        }
+
+        .cv-entry-item.aoc-matched-3 {
+            border-left: 4px solid var(--aoc3-color);
+        }
+
+        .entry-title {
+            font-size: .84rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .entry-meta {
+            font-size: .74rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .entry-period {
+            font-weight: 800;
+            color: var(--accent);
+            background: #eff6ff;
+            padding: 1px 8px;
+            border-radius: 6px;
+        }
+
+        .entry-cat-badge {
+            display: inline-flex;
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: .66rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            background: #f1f5f9;
+            color: var(--text-secondary);
+        }
+
+        .aoc-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 1px 8px;
+            border-radius: 999px;
+            font-size: .66rem;
+            font-weight: 800;
+        }
+
+        .aoc-tag.aoc-1 {
+            background: var(--aoc1-bg);
+            color: var(--aoc1-color);
+            border: 1px solid var(--aoc1-border);
+        }
+
+        .aoc-tag.aoc-2 {
+            background: var(--aoc2-bg);
+            color: var(--aoc2-color);
+            border: 1px solid var(--aoc2-border);
+        }
+
+        .aoc-tag.aoc-3 {
+            background: var(--aoc3-bg);
+            color: var(--aoc3-color);
+            border: 1px solid var(--aoc3-border);
+        }
+
+        .aoc-pin-btn {
+            margin-left: auto;
+            font-size: .66rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 6px;
+            border: 1px dashed #cbd5e1;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .aoc-pin-btn:hover {
+            border-color: var(--accent-light);
+            color: var(--accent-light);
+            background: #eff6ff;
+        }
+
+        .fy-badge {
+            display: inline-flex;
+            padding: 3px 10px;
+            background: var(--accent-lighter);
+            border: 1px solid rgba(37, 99, 235, .2);
+            border-radius: 20px;
+            font-size: .74rem;
+            font-weight: 800;
+            color: var(--accent-light);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 28px;
+            font-size: .85rem;
+        }
+
+        .chart-footnote {
+            font-size: .73rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .diag-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .diag-pill {
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 9px;
+            font-size: .78rem;
+        }
+
+        .diag-pill b {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .raw-preview {
+            white-space: pre-wrap;
+            max-height: 280px;
+            overflow: auto;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: .72rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ==================== UPLOAD VIEW ==================== -->
+    <div id="upload-view">
+        <div class="upload-container">
+            <div class="track-pill">🏛️ UPenn Perelman School of Medicine · COAP-ACC</div>
+            <h1>Academic Clinician (AC) CV Dashboard</h1>
+            <p class="subtitle">Upload a UPenn/FEDS-format RTF CV to visualize Teaching, Invited Talks, Committees,
+                Publications, and Area of Concentration (AoC) alignment.</p>
+
+            <div class="dropzone" id="dropzone">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                <h3>Upload FEDS CV (.rtf)</h3>
+                <p>Drag & drop one or more .rtf files here, or click to browse</p>
+                <input type="file" id="file-input" accept=".rtf" multiple>
+            </div>
+
+            <div class="cv-selector-area" id="cv-selector-area" style="display:none">
+                <h4>📁 Uploaded CVs — select one to review:</h4>
+                <ul class="cv-file-list" id="cv-file-list"></ul>
+            </div>
+
+            <!-- Up to 3 Areas of Concentration (AoCs) -->
+            <div class="aoc-setup-box">
+                <div class="aoc-setup-header">
+                    <h3>🎯 Areas of Concentration (AoC) — Up to 3</h3>
+                    <span class="v2-badge">v2.0 AoC Highlighter & Extractor</span>
+                </div>
+                <p class="aoc-setup-desc">
+                    Enter up to three Areas of Concentration. Include optional comma-separated keywords to automatically
+                    highlight and pull out related teaching, talks, committees, and publications across the CV.
+                </p>
+                <div class="aoc-inputs-grid">
+                    <div class="aoc-input-row">
+                        <span class="aoc-badge-label aoc-badge-1">AoC #1</span>
+                        <input type="text" id="aoc-name-1" placeholder="e.g., Quality Improvement & Patient Safety">
+                        <input type="text" id="aoc-kw-1"
+                            placeholder="Keywords (optional): e.g., safety, deterioration, QI, pathway, arrest">
+                    </div>
+                    <div class="aoc-input-row">
+                        <span class="aoc-badge-label aoc-badge-2">AoC #2</span>
+                        <input type="text" id="aoc-name-2" placeholder="e.g., Medical Education & Simulation">
+                        <input type="text" id="aoc-kw-2"
+                            placeholder="Keywords (optional): e.g., simulation, resident, fellow, curriculum, POCUS">
+                    </div>
+                    <div class="aoc-input-row">
+                        <span class="aoc-badge-label aoc-badge-3">AoC #3</span>
+                        <input type="text" id="aoc-name-3" placeholder="e.g., Clinical Operations & Outreach">
+                        <input type="text" id="aoc-kw-3"
+                            placeholder="Keywords (optional): e.g., outreach, operations, transport, sepsis, ICU">
+                    </div>
+                </div>
+                <div class="aoc-presets">
+                    <span>Quick fill common PSOM AoCs:</span>
+                    <button type="button" class="preset-chip"
+                        onclick="fillPresetAoC('Quality & Patient Safety', 'quality, safety, QI, pathway, deterioration, error, standardization, outcome')">+
+                        Quality & Safety</button>
+                    <button type="button" class="preset-chip"
+                        onclick="fillPresetAoC('Medical Education & Curriculum', 'education, curriculum, simulation, resident, fellow, student, boot camp, preceptorship, workshop')">+
+                        Medical Education</button>
+                    <button type="button" class="preset-chip"
+                        onclick="fillPresetAoC('Clinical Operations & Leadership', 'operations, director, clinical, workflow, triage, committee, guideline, protocol')">+
+                        Clinical Operations</button>
+                    <button type="button" class="preset-chip"
+                        onclick="fillPresetAoC('Health Equity & Community Engagement', 'equity, disparity, disparities, community, advocacy, diversity, inclusion, access, social')">+
+                        Health Equity / DEI</button>
+                    <button type="button" class="preset-chip"
+                        onclick="fillPresetAoC('Clinical Informatics & Decision Support', 'informatics, EHR, epic, machine learning, predictive, model, artificial intelligence, dashboard, alert')">+
+                        Informatics / AI</button>
+                </div>
+            </div>
+
+            <div class="settings-row">
+                <div class="settings-group">
+                    <label for="faculty-year">Faculty Appointment Start Year</label>
+                    <input type="number" id="faculty-year" placeholder="Auto-detect" min="1970" max="2040">
+                    <p class="help-text">Auto-detected from Faculty Appointments if blank.</p>
+                </div>
+                <div class="settings-group">
+                    <label for="year-mode">Timeline Grouping Mode</label>
+                    <select id="year-mode">
+                        <option value="fy" selected>Academic Fiscal Year (Jul 1 – Jun 30)</option>
+                        <option value="cy">Calendar Year (Jan 1 – Dec 31)</option>
+                    </select>
+                    <p class="help-text">PSOM reviews typically follow Fiscal Year (FY).</p>
+                </div>
+                <div class="settings-group">
+                    <label for="span-mode">Multi-Year Teaching/Committees</label>
+                    <select id="span-mode">
+                        <option value="active" selected>Count in Each Active Year (e.g. 2022–present)</option>
+                        <option value="start">Count Only in Start Year</option>
+                    </select>
+                    <p class="help-text">How longitudinal roles appear by year.</p>
+                </div>
+            </div>
+
+            <div class="upload-actions">
+                <button class="btn btn-primary" id="btn-generate" disabled onclick="generateDashboard()">Generate AC
+                    Dashboard</button>
+                <button class="btn btn-secondary" onclick="loadExample()">Load AC Example CV</button>
+            </div>
+            <p class="error-msg" id="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- ==================== DASHBOARD VIEW ==================== -->
+    <div id="dashboard-view">
+        <header class="dash-header">
+            <div class="track-pill">Academic Clinician (AC) Track · Portfolio & AoC Dashboard</div>
+            <h1 id="dash-name"></h1>
+            <div class="subtitle" id="dash-rank-line"></div>
+            <div class="institution" id="parse-summary"></div>
+            <div class="header-meta-pills" id="header-meta-pills"></div>
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-sm" onclick="toggleAoCEditor()">🎯 Edit AoCs & Keywords</button>
+                <button class="btn btn-secondary btn-sm" id="btn-toggle-text-hl" onclick="toggleTextHighlight()">✨
+                    Highlight AoC Terms in Text: ON</button>
+                <button class="btn btn-secondary btn-sm" onclick="showUploadView()">⬆ Upload / Switch CV</button>
+            </div>
+        </header>
+
+        <!-- 1. HEADER WITH COUNTS (4 Core AC Metrics) -->
+        <section class="stats-row" id="stats-row"></section>
+
+        <!-- 2. VERSION 2.0: AOC HIGHLIGHTER & EVIDENCE EXTRACTOR -->
+        <section class="aoc-bar-card" id="aoc-panel">
+            <div class="aoc-bar-top">
+                <div class="aoc-bar-title">
+                    <span>🎯</span> Area of Concentration (AoC) Alignment & Content Extractor
+                    <span class="v2-badge">Version 2.0</span>
+                </div>
+                <div class="filter-bar" id="aoc-global-filter"></div>
+            </div>
+
+            <div class="aoc-cards-grid" id="aoc-cards-grid"></div>
+
+            <!-- Inline AoC Editor so users can adjust AoCs live on the dashboard -->
+            <div class="aoc-inline-editor" id="aoc-inline-editor">
+                <div class="aoc-inputs-grid" style="margin-bottom:10px">
+                    <div class="aoc-input-row">
+                        <span class="aoc-badge-label aoc-badge-1">AoC #1</span>
+                        <input type="text" id="dash-aoc-name-1" placeholder="AoC #1 Name">
+                        <input type="text" id="dash-aoc-kw-1" placeholder="Comma-separated keywords">
+                    </div>
+                    <div class="aoc-input-row">
+                        <span class="aoc-badge-label aoc-badge-2">AoC #2</span>
+                        <input type="text" id="dash-aoc-name-2" placeholder="AoC #2 Name">
+                        <input type="text" id="dash-aoc-kw-2" placeholder="Comma-separated keywords">
+                    </div>
+                    <div class="aoc-input-row">
+                        <span class="aoc-badge-label aoc-badge-3">AoC #3</span>
+                        <input type="text" id="dash-aoc-name-3" placeholder="AoC #3 Name">
+                        <input type="text" id="dash-aoc-kw-3" placeholder="Comma-separated keywords">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="applyDashAoCChanges()">Update AoC Highlights & Pulled
+                    Content</button>
+            </div>
+
+            <!-- Pulled AoC Content Drawer -->
+            <details id="aoc-pulled-drawer" style="margin-top:8px" open>
+                <summary style="cursor:pointer;font-size:.84rem;font-weight:800;color:var(--penn-blue)">
+                    📂 Pulled Content Related to Selected AoC(s) (<span id="aoc-pulled-count">0</span> items matched)
+                </summary>
+                <div id="aoc-pulled-content" style="margin-top:12px"></div>
+            </details>
+        </section>
+
+        <!-- 3. NEXT ROW DOWN: OVER TIME AND IN TOTAL ON THE TABLE -->
+        <section class="card">
+            <div class="card-header-flex">
+                <div class="card-title">
+                    <span>🗓️</span> AC Portfolio Activity Over Time & In Total
+                </div>
+                <div class="filter-bar">
+                    <button class="filter-btn active" id="btn-range-fac" onclick="setTableYearScope('faculty')">Since
+                        Faculty Appointment</button>
+                    <button class="filter-btn" id="btn-range-all" onclick="setTableYearScope('all')">All CV
+                        Years</button>
+                    <button class="filter-btn" id="btn-span-toggle" onclick="toggleSpanMode()"></button>
+                </div>
+            </div>
+            <div class="table-scroll" id="matrix-table-container"></div>
+            <p class="chart-footnote" id="matrix-footnote"></p>
+        </section>
+
+        <!-- VISUAL CHARTS ROW -->
+        <div class="two-col">
+            <div class="card">
+                <div class="card-title"><span>📊</span> Teaching, Invited Talks & Committees by Year</div>
+                <div class="chart-wrap"><canvas id="acPillarsChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-title"><span>📚</span> Publications & Presentations Breakdown by Year</div>
+                <div class="chart-wrap"><canvas id="acPubsChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- 4. CORE AC ACTIVITIES EXPLORER (Teaching, Invited Talks, Committees) -->
+        <div class="three-col">
+            <div class="card">
+                <div class="card-header-flex">
+                    <div class="card-title"><span>🎓</span> Major Academic & Clinical Teaching <span class="fy-badge"
+                            id="badge-teaching-count">0</span></div>
+                </div>
+                <div class="item-list" id="list-teaching"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-flex">
+                    <div class="card-title"><span>🎤</span> Invited Talks <span class="fy-badge"
+                            id="badge-talks-count">0</span></div>
+                </div>
+                <div class="item-list" id="list-talks"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-flex">
+                    <div class="card-title"><span>🏛️</span> Academic & Institutional Committees <span class="fy-badge"
+                            id="badge-committees-count">0</span></div>
+                </div>
+                <div class="item-list" id="list-committees"></div>
+            </div>
+        </div>
+
+        <!-- 5. PUBLICATIONS (BROKEN OUT BY AC CATEGORIES) & POSTER/ABSTRACT PRESENTATIONS -->
+        <div class="two-col">
+            <div class="card">
+                <div class="card-header-flex">
+                    <div class="card-title"><span>📄</span> Publications (Broken Out by Category) <span
+                            class="fy-badge" id="badge-pubs-count">0</span></div>
+                </div>
+                <div class="filter-bar" id="pub-category-tabs" style="margin-bottom:14px"></div>
+                <div class="item-list" id="list-pubs"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-flex">
+                    <div class="card-title"><span>📋</span> Poster or Abstract Presentations <span class="fy-badge"
+                            id="badge-abstracts-count">0</span></div>
+                </div>
+                <div class="item-list" id="list-abstracts"></div>
+            </div>
+        </div>
+
+        <!-- 6. REQUESTED LISTS: 1. Hospital & Admin Appointments, 2. Awards/Honors, 3. Professional Memberships -->
+        <div class="three-col">
+            <div class="card">
+                <div class="card-header-flex">
+                    <div class="card-title"><span>🏥</span> 1. Hospital & Admin Appointments <span class="fy-badge"
+                            id="badge-hosp-count">0</span></div>
+                </div>
+                <div class="item-list" id="list-hospital"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-flex">
+                    <div class="card-title"><span>🏅</span> 2. Awards, Honors & Honorary Societies <span
+                            class="fy-badge" id="badge-awards-count">0</span></div>
+                </div>
+                <div class="item-list" id="list-awards"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-flex">
+                    <div class="card-title"><span>🤝</span> 3. Memberships in Professional & Scientific Societies <span
+                            class="fy-badge" id="badge-memberships-count">0</span></div>
+                </div>
+                <div class="item-list" id="list-memberships"></div>
+            </div>
+        </div>
+
+        <!-- 7. PARSE DIAGNOSTICS -->
+        <div class="card">
+            <div class="card-title"><span>🧪</span> Parse Diagnostics & Section Verification</div>
+            <div id="diagnostics"></div>
+            <details style="margin-top:12px">
+                <summary style="cursor:pointer;font-weight:700;color:var(--text-secondary)">Normalized text preview
+                </summary>
+                <pre class="raw-preview" id="raw-preview"></pre>
+            </details>
+        </div>
+    </div>
+
+    <script>
+        const APP_VERSION = '2026.10.29-AC-v2.0';
+        const MONTH_MAP = {
+            january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
+            july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
+            jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12
+        };
+
+        const STOP_WORDS = new Set([
+            'and', 'the', 'for', 'with', 'in', 'of', 'to', 'on', 'at', 'by', 'from', 'or', 'an', 'a', 'as',
+            'area', 'concentration', 'clinical', 'academic', 'medicine', 'medical', 'care', 'health', 'healthcare', 'program', 'penn', 'chop'
+        ]);
+
+        const SECTION_ALIASES = [
+            ['education', 'Education', [/^Education:?$/i]],
+            ['training', 'Postgraduate Training', [/^Postgraduate Training/i]],
+            ['militaryService', 'Military Service', [/^Military Service:?$/i]],
+            ['facultyAppointments', 'Faculty Appointments', [/^Faculty Appointments:?$/i, /^Penn Med Faculty Appointments:?$/i]],
+            ['hospitalAppointments', 'Hospital and/or Administrative Appointments', [
+                /^Hospital and\/or Administrative Appointments:?$/i,
+                /^Hospital and Administrative Appointments:?$/i,
+                /^Penn Other Appointments and Professional Positions:?$/i,
+                /^Other Appointments:?$/i
+            ]],
+            ['certifications', 'Specialty Certification', [/^Specialty Certification:?$/i]],
+            ['licensure', 'Licensure', [/^Licensure:?$/i]],
+            ['awards', 'Awards, Honors and Membership in Honorary Societies', [/^Awards,\s*Honors/i]],
+            ['memberships', 'Memberships in Professional and Scientific Societies and Other Professional Activities', [
+                /^Memberships in Professional and Scientific Societies/i
+            ]],
+            ['editorialPositions', 'Editorial Positions', [/^Editorial Positions:?$/i]],
+            ['committees', 'Academic and Institutional Committees', [/^Academic and Institutional Committees:?$/i]],
+            ['teaching', 'Major Academic and Clinical Teaching Responsibilities', [/^Major Academic and Clinical Teaching/i]],
+            ['invitedLectures', 'Lectures by Invitation', [/^Lectures by Invitation/i, /^Invited Lectures/i, /^Invited Presentations/i]],
+            ['organizingRoles', 'Organizing Roles in Scientific Meetings', [/^Organizing Roles in Scientific Meetings:?$/i]],
+            ['bibliography', 'Bibliography', [/^Bibliography:?$/i]],
+            ['peerReviewed', 'Research Publications, peer reviewed', [
+                /^Research Publications,\s*peer reviewed/i,
+                /^Peer Reviewed Publications/i,
+                /^Peer-Reviewed Original Research/i
+            ]],
+            ['peerReviewedReviews', 'Research Publications, peer-reviewed reviews', [
+                /^Research Publications,\s*peer-reviewed reviews/i,
+                /^Peer-Reviewed Reviews/i
+            ]],
+            ['contributionsCited', 'Contributions to peer-reviewed research publications', [
+                /^Contributions to peer-reviewed research publications/i
+            ]],
+            ['nonPeerReviewed', 'Research Publications, non-peer reviewed', [
+                /^Research Publications,\s*non-peer reviewed/i
+            ]],
+            ['abstracts', 'Abstracts', [/^Abstracts/i, /^Conference Abstracts/i, /^Scientific Abstracts/i]],
+            ['editorials', 'Editorials, Reviews, Chapters', [
+                /^Editorials,\s*Reviews,\s*Chapters/i,
+                /^Reports,\s*Editorials,\s*Chapters/i
+            ]],
+            ['books', 'Books', [/^Books:?$/i]],
+            ['altMedia', 'Alternative Media', [/^Alternative Media:?$/i]],
+            ['patents', 'Patents', [/^Patents:?$/i]]
+        ].map(x => ({ key: x[0], label: x[1], patterns: x[2] }));
+
+        const EXPECTED_AC_CORE = [
+            'facultyAppointments', 'hospitalAppointments', 'awards', 'memberships',
+            'committees', 'teaching', 'invitedLectures', 'peerReviewed', 'editorials', 'abstracts'
+        ];
+
+        // Global Dashboard State
+        let PARSED = null;
+        let pillarsChartInstance = null;
+        let pubsChartInstance = null;
+        let currentPubTab = 'all';
+        let currentAoCFilter = 'all'; // 'all' | 'any' | 1 | 2 | 3
+        let tableYearScope = 'faculty'; // 'faculty' | 'all'
+        let spanMode = 'active'; // 'active' | 'start'
+        let yearMode = 'fy'; // 'fy' | 'cy'
+        let textHighlightEnabled = true;
+        let manualAoCPins = {}; // itemId -> Set of aoc indices (1,2,3)
+
+        function esc(s) {
+            return String(s ?? '').replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        function cleanLine(line) {
+            return String(line || '')
+                .replace(/\bx\d+\b/g, ' ')
+                .replace(/\b(?:ltrrow|rtlrow|trowd|cell|row)\b/g, ' ')
+                .replace(/[ \t]+/g, ' ')
+                .trim();
+        }
+
+        function getRTFCodePage(rtf) {
+            const m = String(rtf || '').match(/\\ansicpg(\d+)/i);
+            return m ? parseInt(m[1], 10) : null;
+        }
+
+        function rtfToText(rtf) {
+            let t = String(rtf || '');
+            let unicodeFallbackChars = 1;
+            t = t.replace(/\\uc(\d+)\s?/gi, (_, n) => {
+                unicodeFallbackChars = Math.max(0, parseInt(n, 10) || 0);
+                return '';
+            });
+            t = t.replace(/\\cell(?=\\|[{}\s]|$)/gi, '\n')
+                .replace(/\\row(?=\\|[{}\s]|$)/gi, '\n')
+                .replace(/\\pard?(?=\\|[{}\s]|$)/gi, '\n')
+                .replace(/\\line(?=\\|[{}\s]|$)/gi, '\n')
+                .replace(/\\tab(?=\\|[{}\s]|$)/gi, '\t');
+            t = t.replace(/\\u(-?\d+)\s?/g, (_, code) => {
+                let n = parseInt(code, 10);
+                if (n < 0) n += 65536;
+                return String.fromCharCode(n) + '\u0000'.repeat(unicodeFallbackChars);
+            });
+            if (unicodeFallbackChars) {
+                let skip = 0, rebuilt = '';
+                for (let i = 0; i < t.length; i++) {
+                    if (t[i] === '\u0000') { skip = unicodeFallbackChars; continue; }
+                    if (skip > 0) {
+                        if (t[i] === '\\' && t[i + 1] === "'" && /^[0-9a-fA-F]{2}$/.test(t.slice(i + 2, i + 4))) i += 3;
+                        skip--;
+                        continue;
+                    }
+                    rebuilt += t[i];
+                }
+                t = rebuilt;
+            }
+            const cp = { 0x91: '‘', 0x92: '’', 0x93: '“', 0x94: '”', 0x95: '•', 0x96: '–', 0x97: '—', 0xa0: ' ' };
+            t = t.replace(/\\'([0-9a-fA-F]{2})/g, (_, h) => {
+                const b = parseInt(h, 16);
+                return cp[b] || String.fromCharCode(b);
+            });
+            t = t.replace(/\{\\\*[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g, ' ');
+            t = t.replace(/\\[a-zA-Z]+-?\d* ?/g, ' ').replace(/\\[{}\\]/g, '').replace(/[{}]/g, ' ');
+            t = t.replace(/\r\n?|\u2028|\u2029|[\u0007\u000b\ufff9\ufffa\ufffb]/g, '\n');
+            const residue = /^(?:e?ftab\d+|(?:part)?tightenfactor\d+|pardeftab\d+)$/i;
+            return t.split(/\n+/).map(cleanLine).filter(x => x && !residue.test(x)).join('\n');
+        }
+
+        function matchSectionLine(line) {
+            const trimmed = line.trim();
+            for (const s of SECTION_ALIASES) {
+                if (s.patterns.some(re => re.test(trimmed))) return s;
+            }
+            return null;
+        }
+
+        function splitSections(text) {
+            const lines = text.split('\n');
+            const starts = [];
+            lines.forEach((line, i) => {
+                const s = matchSectionLine(line);
+                if (s) starts.push({ key: s.key, label: s.label, title: line, line: i });
+            });
+            const sections = {};
+            starts.forEach((st, i) => {
+                const end = i + 1 < starts.length ? starts[i + 1].line : lines.length;
+                const chunk = lines.slice(st.line + 1, end).join('\n').trim();
+                if (sections[st.key]) {
+                    sections[st.key].text = (sections[st.key].text + '\n' + chunk).trim();
+                } else {
+                    sections[st.key] = { ...st, text: chunk };
+                }
+            });
+            return { sections, starts };
+        }
+
+        function toBucketYear(year, month) {
+            if (!year) return null;
+            if (yearMode === 'cy') return year;
+            return month >= 7 ? year + 1 : year;
+        }
+
+        function bucketLabel(yr, startBucket) {
+            if (yearMode === 'cy') {
+                const rel = yr - startBucket + 1;
+                return rel >= 1 ? `${yr} (Yr ${rel})` : `${yr}`;
+            }
+            const rel = yr - startBucket + 1;
+            return rel >= 1 ? `FY${String(yr).slice(-2)} (Yr ${rel})` : `FY${String(yr).slice(-2)}`;
+        }
+
+        // Parse date ranges from FEDS lines (e.g. "2021-present", "2019-2022", "Jul 2022 - Jun 2024", "Jan 15, 2024", "2023")
+        function parsePeriodSpan(periodStr, currentYear) {
+            const s = String(periodStr || '').trim();
+            if (!s) return { startYear: null, endYear: null, month: 1, activeYears: [] };
+
+            // Check Month + Year (e.g., "Jan, 2024", "January 15, 2024")
+            const mMonthYr = s.match(/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?(?:\s+\d{1,2}(?:\s*[-–]\s*\d{1,2})?)?,?\s+(\d{4})/i);
+            if (mMonthYr) {
+                const k = mMonthYr[1].toLowerCase();
+                const mo = MONTH_MAP[k] || MONTH_MAP[k.slice(0, 3)] || 1;
+                const yr = +mMonthYr[2];
+                const bYr = toBucketYear(yr, mo);
+                return { startYear: yr, endYear: yr, month: mo, startBucket: bYr, endBucket: bYr, activeBuckets: [bYr] };
+            }
+
+            // Check Year Range (e.g., "2020-present", "2019-2023", "07/2021-06/2023")
+            const years = [...s.matchAll(/\b(19\d{2}|20\d{2})\b/g)].map(m => +m[1]);
+            const isPresent = /\bpresent\b|\bcurrent\b|[-–]\s*$/i.test(s);
+            if (years.length >= 1) {
+                const startY = years[0];
+                const endY = isPresent ? currentYear : (years[1] || startY);
+                const startB = toBucketYear(startY, 7); // Academic year start default
+                const endB = toBucketYear(Math.max(startY, endY), isPresent ? 1 : 6);
+                const buckets = [];
+                for (let y = Math.min(startB, endB); y <= Math.max(startB, endB); y++) {
+                    buckets.push(y);
+                }
+                return { startYear: startY, endYear: endY, month: 7, startBucket: startB, endBucket: endB, activeBuckets: buckets };
+            }
+
+            return { startYear: null, endYear: null, month: 1, startBucket: null, endBucket: null, activeBuckets: [] };
+        }
+
+        function dateLead(line) {
+            const s = String(line || '').trim();
+            // Match "2021-present ...", "2020 - 2023 ...", "07/2020 - 06/2022 ...", "Jan, 2024 ...", "January 15, 2024 ...", "2023 ..."
+            const m = s.match(/^((?:\d{1,2}\/)?\d{4}(?:\s*[-–]\s*(?:(?:\d{1,2}\/)?\d{4}|present|current))?|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?(?:\s+\d{1,2}(?:\s*[-–]\s*\d{1,2})?)?,?\s+\d{4})(?:\s+(.+))?$/i);
+            return m ? { period: m[1].replace(/\s*[–]\s*/g, '-').trim(), rest: cleanLine(m[2] || '') } : null;
+        }
+
+        function assembleDateLed(txt, currentYear) {
+            const rawLines = (txt || '').split('\n').map(cleanLine).filter(x => x && !/^\[?none\]?$/i.test(x));
+            const out = [];
+            let current = null;
+            let currentScopeHeader = '';
+
+            const flush = () => {
+                if (current) {
+                    current.description = cleanLine(current.parts.join(' '));
+                    current.raw = cleanLine([current.period, current.description].filter(Boolean).join(' '));
+                    if (current.description || current.period) {
+                        const span = parsePeriodSpan(current.period || current.description, currentYear);
+                        out.push({
+                            ...current,
+                            scopeHeader: current.scopeHeader || '',
+                            ...span
+                        });
+                    }
+                    current = null;
+                }
+            };
+
+            for (const line of rawLines) {
+                if (/^(?:National|Local|Regional|International|Institutional|Departmental|Hospital|Extramural|Intramural):?$/i.test(line)) {
+                    flush();
+                    currentScopeHeader = line.replace(/:$/, '').trim();
+                    continue;
+                }
+                const d = dateLead(line);
+                if (d) {
+                    flush();
+                    current = { period: d.period, parts: d.rest ? [d.rest] : [], scopeHeader: currentScopeHeader };
+                } else if (current) {
+                    // Check if a single period header in FEDS has multiple distinct bulleted/capitalized roles beneath it
+                    if (/^[•\-]\s+/.test(line)) {
+                        const prevPeriod = current.period;
+                        flush();
+                        current = { period: prevPeriod, parts: [line.replace(/^[•\-]\s+/, '')], scopeHeader: currentScopeHeader };
+                    } else {
+                        current.parts.push(line);
+                    }
+                } else {
+                    const fallbackYears = [...line.matchAll(/\b(19\d{2}|20\d{2})\b/g)].map(m => +m[1]);
+                    const fy = fallbackYears.length ? fallbackYears[fallbackYears.length - 1] : null;
+                    const span = fy ? parsePeriodSpan(String(fy), currentYear) : { startYear: null, endYear: null, startBucket: null, endBucket: null, activeBuckets: [] };
+                    out.push({ period: fy ? String(fy) : '', description: line, raw: line, scopeHeader: currentScopeHeader, ...span });
+                }
+            }
+            flush();
+            return out;
+        }
+
+        function extractNumberedEntries(txt) {
+            txt = (txt || '').trim();
+            if (!txt || /^\[?none\]?$/i.test(txt)) return [];
+            const re = /(^|\n)\s*(\d+)\.\s+/g;
+            const ms = [...txt.matchAll(re)];
+            if (!ms.length) {
+                // Fallback if entries aren't numbered
+                return txt.split('\n').map(cleanLine).filter(x => x && !/^\[?none\]?$/i.test(x)).map((line, idx) => ({ number: idx + 1, text: line }));
+            }
+            return ms.map((m, i) => {
+                const start = m.index + m[0].length;
+                const end = i + 1 < ms.length ? ms[i + 1].index : txt.length;
+                return { number: +m[2], text: cleanLine(txt.slice(start, end).replace(/\n+/g, ' ')) };
+            }).filter(x => x.text && !/^\[?none\]?$/i.test(x.text));
+        }
+
+        function extractYearMonth(text) {
+            const m = String(text).match(/\b(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?,?\s+(\d{4})\b/i);
+            if (m) {
+                const k = m[1].toLowerCase();
+                return { month: MONTH_MAP[k] || MONTH_MAP[k.slice(0, 4)] || MONTH_MAP[k.slice(0, 3)] || 1, year: +m[2] };
+            }
+            const ys = [...String(text).matchAll(/\b(19\d{2}|20\d{2})\b/g)].map(x => +x[1]);
+            return { month: 1, year: ys.length ? ys[ys.length - 1] : null };
+        }
+
+        function splitTitleJournal(rest) {
+            rest = cleanLine(rest);
+            const m = rest.match(/^(.+?)\.\s+(.+)$/);
+            if (!m) return { title: rest.slice(0, 200), journal: '' };
+            let j = m[2].trim();
+            j = j.replace(/\s+\d+\s*\(.+$/, '')
+                .replace(/\s+\d+[:(].+$/, '')
+                .replace(/,\s*(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec).+$/i, '')
+                .replace(/\s+Notes:.+$/i, '')
+                .trim();
+            return { title: m[1].trim(), journal: j };
+        }
+
+        // Classify items inside "Editorials, Reviews, Chapters" or "Books" into:
+        // 'bookChapters' | 'reviewArticles' | 'editorials'
+        function classifyEditorialReviewChapter(rawText, sourceKey) {
+            if (sourceKey === 'books') return 'bookChapters';
+            if (sourceKey === 'peerReviewedReviews') return 'peerReviewed'; // Note: also tracked in reviewArticles option
+            const s = String(rawText || '');
+
+            // Book chapter patterns in FEDS: "In: ...", "(Eds.)", "Ed.", "Chapter", known medical publishers, "pp. 12-34"
+            if (/\bIn:\s+[A-Z]|\b(?:Eds?|Editors?)\b\.?|\bChapter\b|\bEdition\b|\bpp\.?\s*\d+|\b(?:Springer|Elsevier|Wolters Kluwer|Lippincott|Saunders|McGraw-Hill|Oxford University Press|Cambridge University Press|Academic Press|Wiley)\b/i.test(s)) {
+                return 'bookChapters';
+            }
+
+            // Review article patterns inside Editorials, Reviews, Chapters
+            if (/\b(?:Systematic Review|Literature Review|Narrative Review|Scoping Review|State[- ]of[- ]the[- ]Art|Review of|Current Opinion|Clinics of North America|UpToDate|StatPearls|Pediatrics in Review|Comprehensive Review)\b/i.test(s)) {
+                return 'reviewArticles';
+            }
+
+            // Default in Editorials, Reviews, Chapters to Editorial / Commentary / Report
+            return 'editorials';
+        }
+
+        function parseCitation(item, sectionKey) {
+            const raw = cleanLine(item.text);
+            const d = extractYearMonth(raw);
+            let authors = '', rest = raw;
+            const c = raw.indexOf(':');
+            if (c > 0 && c < 600) {
+                authors = raw.slice(0, c).trim();
+                rest = raw.slice(c + 1).trim();
+            }
+            const tj = splitTitleJournal(rest);
+            const bucketYr = d.year ? toBucketYear(d.year, d.month) : null;
+
+            let acPubSubcat = sectionKey;
+            if (sectionKey === 'editorials' || sectionKey === 'books') {
+                acPubSubcat = classifyEditorialReviewChapter(raw, sectionKey);
+            }
+
+            return {
+                id: `${sectionKey}-${item.number}-${Math.random().toString(36).slice(2, 6)}`,
+                number: item.number,
+                raw,
+                authors,
+                title: tj.title || raw.slice(0, 180),
+                journal: tj.journal,
+                year: d.year,
+                month: d.month,
+                bucketYear: bucketYr,
+                activeBuckets: bucketYr ? [bucketYr] : [],
+                sectionKey,
+                acPubSubcat
+            };
+        }
+
+        function detectNameFromText(text) {
+            const lines = text.split('\n').filter(Boolean);
+            const idx = lines.findIndex(l => /Curriculum Vitae/i.test(l));
+            if (idx >= 0) {
+                for (let i = idx + 1; i < Math.min(idx + 12, lines.length); i++) {
+                    const l = lines[i];
+                    if (/^Date:/i.test(l) || /^Address:/i.test(l)) continue;
+                    if (/\b(MD|DO|PhD|MBE|MSCE|MPH|MHS|MBA|RN|MSEd|MS)\b/i.test(l) || /^[A-Z][A-Za-z'\-]+\s+[A-Z][A-Za-z'\-]+/.test(l)) {
+                        return l.replace(/\\+\s*$/, '').trim();
+                    }
+                }
+            }
+            return 'Unknown Faculty';
+        }
+
+        function detectFacultyYearFromText(sections) {
+            const txt = sections.facultyAppointments?.text || '';
+            const ys = [...txt.matchAll(/\b(19\d{2}|20\d{2})\s*[-–]\s*(?:present|current|\d{4})\b/gi)].map(x => +x[1]);
+            return ys.length ? Math.min(...ys) : null;
+        }
+
+        function parseLectures(txt, currentYear) {
+            const rows = assembleDateLed(txt, currentYear);
+            return rows.map((r, idx) => {
+                const desc = r.description || r.raw || '';
+                const tm = desc.match(/^["“]([^"”]+)["”]/);
+                const title = tm ? tm[1] : desc.split(',')[0].replace(/^["“]|["”]$/g, '').trim();
+                const venue = tm ? desc.slice(tm[0].length).replace(/^[\s,;:-]+/, '').trim() : desc;
+                return {
+                    id: `talk-${idx + 1}`,
+                    period: r.period || (r.startYear ? String(r.startYear) : ''),
+                    title: title || desc,
+                    venue: venue || '',
+                    description: desc,
+                    raw: r.raw,
+                    scopeHeader: r.scopeHeader || '',
+                    startYear: r.startYear,
+                    bucketYear: r.startBucket,
+                    activeBuckets: r.activeBuckets?.length ? r.activeBuckets : (r.startBucket ? [r.startBucket] : []),
+                    categoryLabel: 'Invited Talk'
+                };
+            });
+        }
+
+        function parseRTF(rtfContent, facultyStartYearOverride) {
+            const currentYear = new Date().getFullYear();
+            const rtfCodePage = getRTFCodePage(rtfContent);
+            const hadUnicodeSeparators = /\\u(?:8232|8233)\??/i.test(rtfContent) || /[\u2028\u2029]/.test(rtfContent);
+            const text = rtfToText(rtfContent);
+            const { sections, starts } = splitSections(text);
+            const name = detectNameFromText(text);
+            const facYear = facultyStartYearOverride || detectFacultyYearFromText(sections) || 2020;
+            const facBucket = toBucketYear(facYear, 7);
+
+            const bib = k => extractNumberedEntries(sections[k]?.text || '').map(it => parseCitation(it, k));
+
+            const teaching = assembleDateLed(sections.teaching?.text || '', currentYear).map((r, i) => ({
+                ...r, id: `teach-${i + 1}`, categoryLabel: 'Teaching Responsibility'
+            }));
+
+            const committees = assembleDateLed(sections.committees?.text || '', currentYear).map((r, i) => ({
+                ...r, id: `comm-${i + 1}`, categoryLabel: 'Committee Membership'
+            }));
+
+            const lectures = parseLectures(sections.invitedLectures?.text || '', currentYear);
+
+            const hospitalAppointments = assembleDateLed(sections.hospitalAppointments?.text || '', currentYear).map((r, i) => ({
+                ...r, id: `hosp-${i + 1}`, categoryLabel: 'Hospital / Admin Appointment'
+            }));
+
+            const awards = assembleDateLed(sections.awards?.text || '', currentYear).map((r, i) => ({
+                ...r, id: `award-${i + 1}`, categoryLabel: 'Award / Honor'
+            }));
+
+            const memberships = assembleDateLed(sections.memberships?.text || '', currentYear).map((r, i) => ({
+                ...r, id: `memb-${i + 1}`, categoryLabel: 'Professional Society Membership'
+            }));
+
+            const facultyAppointments = assembleDateLed(sections.facultyAppointments?.text || '', currentYear).map((r, i) => ({
+                ...r, id: `fac-${i + 1}`, categoryLabel: 'Faculty Appointment'
+            }));
+
+            const peerReviewed = bib('peerReviewed');
+            const peerReviewedReviews = bib('peerReviewedReviews');
+            const contributionsCited = bib('contributionsCited');
+            const nonPeerReviewed = bib('nonPeerReviewed');
+            const editorialsRaw = bib('editorials');
+            const booksRaw = bib('books');
+            const altMedia = bib('altMedia').map(x => ({ ...x, acPubSubcat: 'altMedia' }));
+            const abstracts = bib('abstracts').map(x => ({ ...x, categoryLabel: 'Poster / Abstract' }));
+
+            // Partition publications into the 5 AC Breakout buckets requested:
+            // 1. All Peer-Reviewed (peerReviewed + contributionsCited + nonPeerReviewed)
+            // 2. Book Chapters (books + editorials classified as bookChapters)
+            // 3. Review Articles (peerReviewedReviews + editorials classified as reviewArticles)
+            // 4. Editorials (editorials classified as editorials)
+            // 5. Alternative Media (altMedia)
+            const pubAllPeerReviewed = [
+                ...peerReviewed,
+                ...contributionsCited,
+                ...nonPeerReviewed
+            ].map(x => ({ ...x, acGroup: 'peerReviewedGroup', categoryLabel: 'Peer-Reviewed Research' }));
+
+            const pubBookChapters = [
+                ...booksRaw,
+                ...editorialsRaw.filter(x => x.acPubSubcat === 'bookChapters')
+            ].map(x => ({ ...x, acGroup: 'bookChapters', categoryLabel: 'Book Chapter' }));
+
+            const pubReviewArticles = [
+                ...peerReviewedReviews,
+                ...editorialsRaw.filter(x => x.acPubSubcat === 'reviewArticles')
+            ].map(x => ({ ...x, acGroup: 'reviewArticles', categoryLabel: 'Review Article' }));
+
+            const pubEditorials = [
+                ...editorialsRaw.filter(x => x.acPubSubcat === 'editorials')
+            ].map(x => ({ ...x, acGroup: 'editorials', categoryLabel: 'Editorial / Commentary' }));
+
+            const pubAltMedia = altMedia.map(x => ({ ...x, acGroup: 'altMedia', categoryLabel: 'Alternative Media' }));
+
+            const allPublications = [
+                ...pubAllPeerReviewed,
+                ...pubBookChapters,
+                ...pubReviewArticles,
+                ...pubEditorials,
+                ...pubAltMedia
+            ];
+
+            const data = {
+                name,
+                facultyStartYear: facYear,
+                facultyStartBucket: facBucket,
+                normalizedText: text,
+                rtfCodePage,
+                hadUnicodeSeparators,
+                facultyAppointments,
+                teaching,
+                lectures,
+                committees,
+                hospitalAppointments,
+                awards,
+                memberships,
+                pubAllPeerReviewed,
+                pubBookChapters,
+                pubReviewArticles,
+                pubEditorials,
+                pubAltMedia,
+                allPublications,
+                abstracts
+            };
+
+            buildDiagnostics(data, starts);
+            return data;
+        }
+
+        function buildDiagnostics(data, starts) {
+            const found = starts.map(s => s.key);
+            const warnings = [];
+            if (data.name === 'Unknown Faculty') warnings.push('Faculty name was not automatically detected.');
+            if (data.teaching.length === 0 && found.includes('teaching')) {
+                warnings.push('Major Academic & Clinical Teaching section was detected, but no rows were extracted.');
+            }
+            if (data.lectures.length === 0 && found.includes('invitedLectures')) {
+                warnings.push('Lectures by Invitation section was detected, but no lecture entries were extracted.');
+            }
+            let score = 20;
+            if (data.name !== 'Unknown Faculty') score += 15;
+            if (data.teaching.length > 0) score += 20;
+            if (data.lectures.length > 0) score += 15;
+            if (data.committees.length > 0) score += 15;
+            if (data.allPublications.length > 0 || data.abstracts.length > 0) score += 15;
+
+            data.diagnostics = {
+                parserUsed: 'FEDS AC Track Portfolio Parser',
+                score: Math.min(100, score),
+                sectionsDetected: starts.map(s => s.title),
+                sectionsMissing: EXPECTED_AC_CORE.filter(k => !found.includes(k)),
+                warnings,
+                rawTextPreview: data.normalizedText.slice(0, 30000)
+            };
+        }
+
+        // ==================== VERSION 2.0: AOC MATCHING & HIGHLIGHTING ENGINE ====================
+        function getConfiguredAoCs() {
+            const aocs = [];
+            for (let i = 1; i <= 3; i++) {
+                const nameEl = document.getElementById(`aoc-name-${i}`);
+                const kwEl = document.getElementById(`aoc-kw-${i}`);
+                const name = (nameEl?.value || '').trim();
+                const kwRaw = (kwEl?.value || '').trim();
+                if (!name && !kwRaw) continue;
+
+                // Derive terms from both the AoC title and explicit comma-separated keywords
+                const explicitTerms = kwRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+                const titleWords = name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s\-]/g, ' ')
+                    .split(/\s+/)
+                    .filter(w => w.length >= 3 && !STOP_WORDS.has(w));
+
+                const allTerms = [...new Set([...explicitTerms, ...titleWords])];
+                aocs.push({
+                    index: i,
+                    name: name || `AoC #${i}`,
+                    keywordsRaw: kwRaw,
+                    terms: allTerms
+                });
+            }
+            return aocs;
+        }
+
+        function evaluateAoCMatches(data) {
+            const aocs = getConfiguredAoCs();
+            data.aocs = aocs;
+
+            const allCollections = [
+                ...data.teaching,
+                ...data.lectures,
+                ...data.committees,
+                ...data.allPublications,
+                ...data.abstracts,
+                ...data.hospitalAppointments,
+                ...data.awards,
+                ...data.memberships
+            ];
+
+            allCollections.forEach(item => {
+                const textBlob = `${item.title || ''} ${item.description || ''} ${item.venue || ''} ${item.journal || ''} ${item.raw || ''}`.toLowerCase();
+                const matched = new Set();
+
+                // Check automatic keyword match
+                aocs.forEach(aoc => {
+                    if (aoc.terms.some(term => {
+                        if (term.length <= 3) {
+                            const re = new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+                            return re.test(textBlob);
+                        }
+                        return textBlob.includes(term);
+                    })) {
+                        matched.add(aoc.index);
+                    }
+                });
+
+                // Check manual user pins
+                if (manualAoCPins[item.id]) {
+                    manualAoCPins[item.id].forEach(idx => matched.add(idx));
+                }
+
+                item.aocMatches = [...matched].sort();
+            });
+        }
+
+        function cycleManualAoCPin(itemId) {
+            const aocs = PARSED?.aocs || [];
+            if (!aocs.length) {
+                alert('Enter at least one Area of Concentration (AoC) using "Edit AoCs & Keywords" first.');
+                return;
+            }
+            const current = manualAoCPins[itemId] ? [...manualAoCPins[itemId]][0] : 0;
+            const availableIndices = aocs.map(a => a.index);
+            const nextPos = availableIndices.indexOf(current) + 1;
+            if (nextPos < availableIndices.length) {
+                manualAoCPins[itemId] = new Set([availableIndices[nextPos]]);
+            } else if (current === 0) {
+                manualAoCPins[itemId] = new Set([availableIndices[0]]);
+            } else {
+                delete manualAoCPins[itemId];
+            }
+            renderDashboard(PARSED);
+        }
+
+        // Apply CSS Custom Highlight API (with <mark> fallback if unsupported)
+        function applyCustomTextHighlights() {
+            if (typeof CSS !== 'undefined' && CSS.highlights) {
+                CSS.highlights.clear();
+            }
+            if (!textHighlightEnabled || !PARSED?.aocs?.length) return;
+
+            const container = document.getElementById('dashboard-view');
+            if (!container) return;
+
+            if (typeof CSS !== 'undefined' && CSS.highlights && typeof Highlight !== 'undefined') {
+                const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+                const textNodes = [];
+                let n = walker.nextNode();
+                while (n) {
+                    const parentTag = n.parentElement?.tagName;
+                    if (parentTag !== 'SCRIPT' && parentTag !== 'STYLE' && parentTag !== 'BUTTON' && parentTag !== 'INPUT') {
+                        textNodes.push(n);
+                    }
+                    n = walker.nextNode();
+                }
+
+                PARSED.aocs.forEach(aoc => {
+                    const ranges = [];
+                    const validTerms = aoc.terms.filter(t => t.length >= 2);
+                    if (!validTerms.length) return;
+
+                    for (const node of textNodes) {
+                        const text = node.textContent;
+                        const lower = text.toLowerCase();
+                        for (const term of validTerms) {
+                            let pos = lower.indexOf(term);
+                            while (pos !== -1) {
+                                const range = new Range();
+                                range.setStart(node, pos);
+                                range.setEnd(node, pos + term.length);
+                                ranges.push(range);
+                                pos = lower.indexOf(term, pos + term.length);
+                            }
+                        }
+                    }
+
+                    if (ranges.length) {
+                        const hl = new Highlight(...ranges);
+                        hl.priority = 4 - aoc.index;
+                        CSS.highlights.set(`aoc-${aoc.index}`, hl);
+                    }
+                });
+            } else {
+                // Fallback for browsers without CSS.highlights: wrap matched text in <mark> elements
+                const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+                const nodes = [];
+                for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+                    const pTag = n.parentElement?.tagName;
+                    if (pTag !== 'SCRIPT' && pTag !== 'STYLE' && pTag !== 'BUTTON' && pTag !== 'INPUT' && pTag !== 'MARK') {
+                        nodes.push(n);
+                    }
+                }
+                const firstAoc = PARSED.aocs[0];
+                const term = firstAoc?.terms.find(t => t.length >= 3);
+                if (!term) return;
+                for (const textNode of nodes) {
+                    const text = textNode.textContent;
+                    let pos = text.toLowerCase().indexOf(term);
+                    if (pos === -1) continue;
+                    const frag = document.createDocumentFragment();
+                    let last = 0;
+                    while (pos !== -1) {
+                        frag.append(text.slice(last, pos));
+                        const mark = document.createElement('mark');
+                        mark.className = `aoc-mark-${firstAoc.index}`;
+                        mark.textContent = text.slice(pos, pos + term.length);
+                        frag.append(mark);
+                        last = pos + term.length;
+                        pos = text.toLowerCase().indexOf(term, last);
+                    }
+                    frag.append(text.slice(last));
+                    textNode.replaceWith(frag);
+                }
+            }
+        }
+
+        function toggleTextHighlight() {
+            textHighlightEnabled = !textHighlightEnabled;
+            const btn = document.getElementById('btn-toggle-text-hl');
+            btn.textContent = `✨ Highlight AoC Terms in Text: ${textHighlightEnabled ? 'ON' : 'OFF'}`;
+            applyCustomTextHighlights();
+        }
+
+        // ==================== YEAR BUCKETING HELPERS ====================
+        function itemMatchesYearBucket(item, yr) {
+            if (spanMode === 'active' && item.activeBuckets && item.activeBuckets.length) {
+                return item.activeBuckets.includes(yr);
+            }
+            const b = item.bucketYear || item.startBucket;
+            return b === yr;
+        }
+
+        function collectAllBuckets(data) {
+            const currentYear = new Date().getFullYear();
+            const currentMonth = new Date().getMonth() + 1;
+            const currentBucket = toBucketYear(currentYear, currentMonth);
+
+            const allItems = [
+                ...data.teaching,
+                ...data.lectures,
+                ...data.committees,
+                ...data.allPublications,
+                ...data.abstracts
+            ];
+
+            const years = new Set();
+            allItems.forEach(item => {
+                if (spanMode === 'active' && item.activeBuckets?.length) {
+                    item.activeBuckets.forEach(y => { if (y && y >= 1980 && y <= currentBucket + 1) years.add(y); });
+                } else {
+                    const b = item.bucketYear || item.startBucket;
+                    if (b && b >= 1980 && b <= currentBucket + 1) years.add(b);
+                }
+            });
+
+            // Always ensure faculty appointment years up to current year are represented
+            for (let y = data.facultyStartBucket; y <= currentBucket; y++) {
+                years.add(y);
+            }
+
+            const sorted = [...years].sort((a, b) => a - b);
+            if (tableYearScope === 'faculty') {
+                return sorted.filter(y => y >= data.facultyStartBucket);
+            }
+            return sorted;
+        }
+
+        function itemPassesGlobalAoCFilter(item) {
+            if (currentAoCFilter === 'all') return true;
+            if (!item.aocMatches || !item.aocMatches.length) return false;
+            if (currentAoCFilter === 'any') return item.aocMatches.length > 0;
+            return item.aocMatches.includes(Number(currentAoCFilter));
+        }
+
+        // ==================== RENDER DASHBOARD ====================
+        function renderDashboard(data) {
+            PARSED = data;
+            evaluateAoCMatches(data);
+
+            // Sync inline AoC editor fields with upload AoC inputs
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`dash-aoc-name-${i}`).value = document.getElementById(`aoc-name-${i}`).value;
+                document.getElementById(`dash-aoc-kw-${i}`).value = document.getElementById(`aoc-kw-${i}`).value;
+            }
+
+            const currentYear = new Date().getFullYear();
+            const currentBucket = toBucketYear(currentYear, new Date().getMonth() + 1);
+            const yearsAtRank = Math.max(1, currentBucket - data.facultyStartBucket + 1);
+
+            document.getElementById('dash-name').textContent = data.name;
+            const latestFacRole = data.facultyAppointments[0]?.raw || `Faculty Appointment (${data.facultyStartYear}–present)`;
+            document.getElementById('dash-rank-line').textContent = latestFacRole;
+            document.getElementById('parse-summary').textContent =
+                `${data.diagnostics.parserUsed} · ${data.diagnostics.sectionsDetected.length} CV sections parsed`;
+
+            document.getElementById('header-meta-pills').innerHTML = [
+                `<span class="meta-pill">📅 Faculty Start: ${data.facultyStartYear} (Year ${yearsAtRank})</span>`,
+                `<span class="meta-pill">📋 Poster/Abstracts: ${data.abstracts.length}</span>`,
+                `<span class="meta-pill">🏥 Hospital/Admin Roles: ${data.hospitalAppointments.length}</span>`,
+                `<span class="meta-pill">🏅 Awards & Honors: ${data.awards.length}</span>`
+            ].join('');
+
+            // 1. HEADER WITH 4 CORE AC COUNTS
+            const stats = [
+                {
+                    n: data.teaching.length,
+                    label: '1. Major Academic & Clinical Teaching Responsibilities',
+                    sub: 'Courses, clerkships, preceptorships & mentoring',
+                    cls: 'stat-teaching'
+                },
+                {
+                    n: data.lectures.length,
+                    label: '2. Invited Talks',
+                    sub: 'Lectures by invitation (local, regional, national)',
+                    cls: 'stat-talks'
+                },
+                {
+                    n: data.committees.length,
+                    label: '3. Academic & Institutional Committees',
+                    sub: 'Departmental, hospital, PSOM & society service',
+                    cls: 'stat-committees'
+                },
+                {
+                    n: data.allPublications.length,
+                    label: '4. Total Publications (Incl. Chapters, Reviews, Editorials & Alt Media)',
+                    sub: `${data.pubAllPeerReviewed.length} PR · ${data.pubBookChapters.length} Ch · ${data.pubReviewArticles.length} Rev · ${data.pubEditorials.length} Ed · ${data.pubAltMedia.length} Alt`,
+                    cls: 'stat-pubs'
+                }
+            ];
+
+            document.getElementById('stats-row').innerHTML = stats.map(s => `
+                <div class="stat-card ${s.cls}">
+                    <div class="stat-number">${s.n}</div>
+                    <div class="stat-label">${s.label}</div>
+                    <div class="stat-sub">${esc(s.sub)}</div>
+                </div>
+            `).join('');
+
+            // 2. VERSION 2.0 AOC PANEL
+            renderAoCPanel(data);
+
+            // 3. OVER TIME AND IN TOTAL TABLE + CHARTS
+            const buckets = collectAllBuckets(data);
+            document.getElementById('btn-span-toggle').textContent =
+                spanMode === 'active' ? 'Span Mode: Active Each Year' : 'Span Mode: Start Year Only';
+            renderOverTimeMatrix(data, buckets);
+            renderACCharts(data, buckets);
+
+            // 4. LISTS & EXPLORERS
+            renderEntryList('list-teaching', 'badge-teaching-count', data.teaching);
+            renderEntryList('list-talks', 'badge-talks-count', data.lectures);
+            renderEntryList('list-committees', 'badge-committees-count', data.committees);
+            renderPublicationsSection(data);
+            renderEntryList('list-abstracts', 'badge-abstracts-count', data.abstracts);
+
+            // 5. THREE REQUESTED LISTS AT BOTTOM
+            renderEntryList('list-hospital', 'badge-hosp-count', data.hospitalAppointments);
+            renderEntryList('list-awards', 'badge-awards-count', data.awards);
+            renderEntryList('list-memberships', 'badge-memberships-count', data.memberships);
+
+            // 6. DIAGNOSTICS
+            renderDiagnostics(data);
+
+            document.getElementById('upload-view').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'block';
+
+            setTimeout(applyCustomTextHighlights, 40);
+        }
+
+        // ==================== RENDER VERSION 2.0 AOC PANEL ====================
+        function renderAoCPanel(data) {
+            const aocs = data.aocs || [];
+            const filterContainer = document.getElementById('aoc-global-filter');
+            const gridContainer = document.getElementById('aoc-cards-grid');
+            const pulledContainer = document.getElementById('aoc-pulled-content');
+            const pulledCountEl = document.getElementById('aoc-pulled-count');
+
+            if (!aocs.length) {
+                filterContainer.innerHTML = '';
+                gridContainer.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1; padding: 14px;">
+                        No Areas of Concentration (AoC) entered yet. Click <b>"🎯 Edit AoCs & Keywords"</b> above to enter up to 3 AoCs and automatically pull & highlight related CV content.
+                    </div>`;
+                pulledCountEl.textContent = '0';
+                pulledContainer.innerHTML = '';
+                return;
+            }
+
+            const filterButtons = [
+                { key: 'all', label: 'Show All CV Items' },
+                { key: 'any', label: 'All AoC Matches' },
+                ...aocs.map(a => ({ key: String(a.index), label: `AoC #${a.index}: ${a.name}` }))
+            ];
+            filterContainer.innerHTML = filterButtons.map(b => `
+                <button class="filter-btn ${String(currentAoCFilter) === b.key ? 'active' : ''}"
+                    onclick="setGlobalAoCFilter('${b.key}')">${esc(b.label)}</button>
+            `).join('');
+
+            gridContainer.innerHTML = aocs.map(aoc => {
+                const idx = aoc.index;
+                const tCount = data.teaching.filter(x => x.aocMatches?.includes(idx)).length;
+                const lCount = data.lectures.filter(x => x.aocMatches?.includes(idx)).length;
+                const cCount = data.committees.filter(x => x.aocMatches?.includes(idx)).length;
+                const pCount = data.allPublications.filter(x => x.aocMatches?.includes(idx)).length;
+                const aCount = data.abstracts.filter(x => x.aocMatches?.includes(idx)).length;
+                const hCount = data.hospitalAppointments.filter(x => x.aocMatches?.includes(idx)).length;
+                const total = tCount + lCount + cCount + pCount + aCount + hCount;
+                const isSelected = String(currentAoCFilter) === String(idx);
+
+                return `
+                    <div class="aoc-summary-card aoc-${idx} ${isSelected ? 'active-filter' : ''}"
+                         onclick="setGlobalAoCFilter('${isSelected ? 'all' : idx}')">
+                        <div class="aoc-card-head">
+                            <span class="aoc-card-name">AoC #${idx}: ${esc(aoc.name)}</span>
+                            <span class="aoc-card-count" style="color:var(--aoc${idx}-color)">${total} items</span>
+                        </div>
+                        <div class="aoc-card-keywords">
+                            <b>Matched keywords:</b> ${esc(aoc.terms.join(', ') || 'None')}
+                        </div>
+                        <div class="aoc-Select-Breakdown">
+                            <span class="aoc-mini-stat">🎓 Teaching: ${tCount}</span>
+                            <span class="aoc-mini-stat">🎤 Talks: ${lCount}</span>
+                            <span class="aoc-mini-stat">🏛️ Committees: ${cCount}</span>
+                            <span class="aoc-mini-stat">📄 Pubs: ${pCount}</span>
+                            <span class="aoc-mini-stat">📋 Abstracts: ${aCount}</span>
+                            <span class="aoc-mini-stat">🏥 Admin: ${hCount}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Build Pulled AoC Evidence Dossier
+            const allGroups = [
+                { label: '🎓 Major Academic & Clinical Teaching', items: data.teaching },
+                { label: '🎤 Invited Talks', items: data.lectures },
+                { label: '🏛️ Academic & Institutional Committees', items: data.committees },
+                { label: '🏥 Hospital & Administrative Appointments', items: data.hospitalAppointments },
+                { label: '📄 Publications (PR, Chapters, Reviews, Editorials, Alt Media)', items: data.allPublications },
+                { label: '📋 Poster / Abstract Presentations', items: data.abstracts },
+                { label: '🏅 Awards, Honors & Society Memberships', items: [...data.awards, ...data.memberships] }
+            ];
+
+            let totalPulled = 0;
+            const groupCardsHtml = allGroups.map(g => {
+                const matchedItems = g.items.filter(item => {
+                    if (!item.aocMatches || !item.aocMatches.length) return false;
+                    if (currentAoCFilter === 'all' || currentAoCFilter === 'any') return true;
+                    return item.aocMatches.includes(Number(currentAoCFilter));
+                });
+                totalPulled += matchedItems.length;
+                if (!matchedItems.length) return '';
+
+                return `
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-size:.8rem;font-weight:800;color:var(--text-secondary);margin-bottom:6px;">
+                            ${g.label} (${matchedItems.length})
+                        </div>
+                        ${matchedItems.map(item => formatCVEntryHTML(item)).join('')}
+                    </div>
+                `;
+            }).filter(Boolean).join('');
+
+            pulledCountEl.textContent = String(totalPulled);
+            pulledContainer.innerHTML = groupCardsHtml || `<div class="no-results">No CV entries matched the active AoC keywords yet. Try adding broader keywords or clicking "+ AoC" on any item below.</div>`;
+        }
+
+        function setGlobalAoCFilter(filterVal) {
+            currentAoCFilter = filterVal;
+            renderDashboard(PARSED);
+        }
+
+        function toggleAoCEditor() {
+            document.getElementById('aoc-inline-editor').classList.toggle('open');
+        }
+
+        function applyDashAoCChanges() {
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`aoc-name-${i}`).value = document.getElementById(`dash-aoc-name-${i}`).value;
+                document.getElementById(`aoc-kw-${i}`).value = document.getElementById(`dash-aoc-kw-${i}`).value;
+            }
+            renderDashboard(PARSED);
+        }
+
+        function fillPresetAoC(title, keywords) {
+            for (let i = 1; i <= 3; i++) {
+                const nameEl = document.getElementById(`aoc-name-${i}`);
+                const kwEl = document.getElementById(`aoc-kw-${i}`);
+                if (!nameEl.value.trim()) {
+                    nameEl.value = title;
+                    kwEl.value = keywords;
+                    return;
+                }
+            }
+            // If all 3 are full, replace AoC 3
+            document.getElementById('aoc-name-3').value = title;
+            document.getElementById('aoc-kw-3').value = keywords;
+        }
+
+        // ==================== RENDER OVER TIME & IN TOTAL MATRIX TABLE ====================
+        function renderOverTimeMatrix(data, buckets) {
+            const fTeaching = data.teaching.filter(itemPassesGlobalAoCFilter);
+            const fTalks = data.lectures.filter(itemPassesGlobalAoCFilter);
+            const fCommittees = data.committees.filter(itemPassesGlobalAoCFilter);
+            const fAllPubs = data.allPublications.filter(itemPassesGlobalAoCFilter);
+            const fPR = data.pubAllPeerReviewed.filter(itemPassesGlobalAoCFilter);
+            const fChapters = data.pubBookChapters.filter(itemPassesGlobalAoCFilter);
+            const fReviews = data.pubReviewArticles.filter(itemPassesGlobalAoCFilter);
+            const fEditorials = data.pubEditorials.filter(itemPassesGlobalAoCFilter);
+            const fAltMedia = data.pubAltMedia.filter(itemPassesGlobalAoCFilter);
+            const fAbstracts = data.abstracts.filter(itemPassesGlobalAoCFilter);
+
+            const rowsConfig = [
+                {
+                    label: '1. Major Academic & Clinical Teaching',
+                    items: fTeaching,
+                    cls: 'group-header-row',
+                    hue: [5, 150, 105]
+                },
+                {
+                    label: '2. Invited Talks',
+                    items: fTalks,
+                    cls: 'group-header-row',
+                    hue: [8, 145, 178]
+                },
+                {
+                    label: '3. Committee Memberships',
+                    items: fCommittees,
+                    cls: 'group-header-row',
+                    hue: [124, 58, 237]
+                },
+                {
+                    label: '4. Publications (Total)',
+                    items: fAllPubs,
+                    cls: 'group-header-row',
+                    hue: [37, 99, 235]
+                },
+                {
+                    label: '↳ All Peer-Reviewed Research',
+                    items: fPR,
+                    cls: 'sub-row',
+                    hue: [37, 99, 235]
+                },
+                {
+                    label: '↳ Book Chapters',
+                    items: fChapters,
+                    cls: 'sub-row',
+                    hue: [37, 99, 235]
+                },
+                {
+                    label: '↳ Review Articles',
+                    items: fReviews,
+                    cls: 'sub-row',
+                    hue: [37, 99, 235]
+                },
+                {
+                    label: '↳ Editorials',
+                    items: fEditorials,
+                    cls: 'sub-row',
+                    hue: [37, 99, 235]
+                },
+                {
+                    label: '↳ Alternative Media',
+                    items: fAltMedia,
+                    cls: 'sub-row',
+                    hue: [37, 99, 235]
+                },
+                {
+                    label: '5. Poster or Abstract Presentations',
+                    items: fAbstracts,
+                    cls: 'group-header-row',
+                    hue: [217, 119, 6]
+                }
+            ];
+
+            const computedRows = rowsConfig.map(r => {
+                const values = buckets.map(yr => r.items.filter(it => itemMatchesYearBucket(it, yr)).length);
+                // Unique total across the CV (or filtered AoC)
+                const uniqueTotal = r.items.length;
+                return { ...r, values, uniqueTotal };
+            });
+
+            const maxCell = Math.max(1, ...computedRows.flatMap(r => r.values));
+
+            function cellStyle(val, rgb) {
+                if (val === 0) return 'background:#f8fafc;color:#94a3b8;';
+                const alpha = (0.14 + 0.72 * (val / maxCell)).toFixed(2);
+                const textColor = (val / maxCell) > 0.55 ? '#ffffff' : '#0f172a';
+                return `background:rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha});color:${textColor};`;
+            }
+
+            let html = `<table class="matrix-table"><thead><tr><th>AC Portfolio Metric</th>`;
+            buckets.forEach(yr => {
+                html += `<th>${esc(bucketLabel(yr, data.facultyStartBucket))}</th>`;
+            });
+            html += `<th class="total-col">Total (CV)</th></tr></thead><tbody>`;
+
+            computedRows.forEach(r => {
+                html += `<tr class="${r.cls}"><td>${esc(r.label)}</td>`;
+                r.values.forEach(v => {
+                    html += `<td class="matrix-cell" style="${cellStyle(v, r.hue)}">${v}</td>`;
+                });
+                html += `<td class="total-col">${r.uniqueTotal}</td></tr>`;
+            });
+
+            html += `</tbody></table>`;
+            document.getElementById('matrix-table-container').innerHTML = html;
+            document.getElementById('matrix-footnote').textContent =
+                spanMode === 'active'
+                    ? 'Note: Multi-year Teaching Responsibilities and Committee Memberships (e.g., 2022–present) are counted in each active year column; the "Total (CV)" column reflects unique total entries.'
+                    : 'Note: Teaching Responsibilities and Committee Memberships are shown in their initial start year; click "Span Mode" above to view active continuity across years.';
+        }
+
+        function setTableYearScope(scope) {
+            tableYearScope = scope;
+            document.getElementById('btn-range-fac').classList.toggle('active', scope === 'faculty');
+            document.getElementById('btn-range-all').classList.toggle('active', scope === 'all');
+            renderDashboard(PARSED);
+        }
+
+        function toggleSpanMode() {
+            spanMode = spanMode === 'active' ? 'start' : 'active';
+            renderDashboard(PARSED);
+        }
+
+        // ==================== RENDER CHARTS ====================
+        function renderACCharts(data, buckets) {
+            if (typeof Chart === 'undefined') return;
+            const labels = buckets.map(yr => bucketLabel(yr, data.facultyStartBucket));
+
+            const fTeaching = data.teaching.filter(itemPassesGlobalAoCFilter);
+            const fTalks = data.lectures.filter(itemPassesGlobalAoCFilter);
+            const fCommittees = data.committees.filter(itemPassesGlobalAoCFilter);
+
+            const ctx1 = document.getElementById('acPillarsChart').getContext('2d');
+            if (pillarsChartInstance) pillarsChartInstance.destroy();
+            pillarsChartInstance = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Teaching Responsibilities',
+                            data: buckets.map(yr => fTeaching.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#059669cc',
+                            borderColor: '#059669',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Invited Talks',
+                            data: buckets.map(yr => fTalks.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#0891b2cc',
+                            borderColor: '#0891b2',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Committee Memberships',
+                            data: buckets.map(yr => fCommittees.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#7c3aedcc',
+                            borderColor: '#7c3aed',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, family: 'Inter' } } }
+                    }
+                }
+            });
+
+            const fPR = data.pubAllPeerReviewed.filter(itemPassesGlobalAoCFilter);
+            const fChapters = data.pubBookChapters.filter(itemPassesGlobalAoCFilter);
+            const fReviews = data.pubReviewArticles.filter(itemPassesGlobalAoCFilter);
+            const fEditorials = data.pubEditorials.filter(itemPassesGlobalAoCFilter);
+            const fAltMedia = data.pubAltMedia.filter(itemPassesGlobalAoCFilter);
+            const fAbstracts = data.abstracts.filter(itemPassesGlobalAoCFilter);
+
+            const ctx2 = document.getElementById('acPubsChart').getContext('2d');
+            if (pubsChartInstance) pubsChartInstance.destroy();
+            pubsChartInstance = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Peer-Reviewed',
+                            data: buckets.map(yr => fPR.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#2563ebcc',
+                            stack: 'pubs'
+                        },
+                        {
+                            label: 'Book Chapters',
+                            data: buckets.map(yr => fChapters.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#7c3aedcc',
+                            stack: 'pubs'
+                        },
+                        {
+                            label: 'Review Articles',
+                            data: buckets.map(yr => fReviews.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#0891b2cc',
+                            stack: 'pubs'
+                        },
+                        {
+                            label: 'Editorials',
+                            data: buckets.map(yr => fEditorials.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#be185dcc',
+                            stack: 'pubs'
+                        },
+                        {
+                            label: 'Alternative Media',
+                            data: buckets.map(yr => fAltMedia.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#059669cc',
+                            stack: 'pubs'
+                        },
+                        {
+                            label: 'Posters / Abstracts',
+                            data: buckets.map(yr => fAbstracts.filter(x => itemMatchesYearBucket(x, yr)).length),
+                            backgroundColor: '#d97706cc',
+                            stack: 'abstracts'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1 } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, family: 'Inter' } } }
+                    }
+                }
+            });
+        }
+
+        // ==================== RENDER ENTRY LISTS ====================
+        function formatCVEntryHTML(item) {
+            const primaryAoc = item.aocMatches?.[0] || null;
+            const aocBorderCls = primaryAoc ? `aoc-matched-${primaryAoc}` : '';
+            const titleText = item.title || item.description || item.raw || 'Untitled Entry';
+            const periodText = item.period || (item.year ? String(item.year) : '');
+            const subMeta = item.journal || item.venue || item.scopeHeader || '';
+
+            const aocTagsHtml = (item.aocMatches || []).map(idx => {
+                const aocObj = (PARSED.aocs || []).find(a => a.index === idx);
+                return `<span class="aoc-tag aoc-${idx}">🎯 AoC #${idx}${aocObj ? `: ${esc(aocObj.name.slice(0, 22))}` : ''}</span>`;
+            }).join('');
+
+            return `
+                <div class="cv-entry-item ${aocBorderCls}">
+                    <div class="entry-title">${item.number ? `${item.number}. ` : ''}${esc(titleText)}</div>
+                    <div class="entry-meta">
+                        ${periodText ? `<span class="entry-period">${esc(periodText)}</span>` : ''}
+                        ${subMeta ? `<span style="font-weight:700;color:var(--text-secondary)">${esc(subMeta)}</span>` : ''}
+                        ${item.categoryLabel ? `<span class="entry-cat-badge">${esc(item.categoryLabel)}</span>` : ''}
+                        ${aocTagsHtml}
+                        <button type="button" class="aoc-pin-btn" onclick="cycleManualAoCPin('${esc(item.id)}')" title="Pin or cycle AoC assignment for this entry">
+                            + AoC
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEntryList(containerId, badgeId, items) {
+            const filtered = items.filter(itemPassesGlobalAoCFilter);
+            const sorted = [...filtered].sort((a, b) => {
+                const ya = a.endYear || a.year || a.startYear || 0;
+                const yb = b.endYear || b.year || b.startYear || 0;
+                return yb - ya;
+            });
+            document.getElementById(badgeId).textContent = String(sorted.length);
+            document.getElementById(containerId).innerHTML =
+                sorted.map(formatCVEntryHTML).join('') || '<div class="no-results">None detected for current filter.</div>';
+        }
+
+        function renderPublicationsSection(data) {
+            const tabDefs = [
+                { key: 'all', label: 'All Pubs', items: data.allPublications },
+                { key: 'peerReviewedGroup', label: 'All Peer-Reviewed', items: data.pubAllPeerReviewed },
+                { key: 'bookChapters', label: 'Book Chapters', items: data.pubBookChapters },
+                { key: 'reviewArticles', label: 'Review Articles', items: data.pubReviewArticles },
+                { key: 'editorials', label: 'Editorials', items: data.pubEditorials },
+                { key: 'altMedia', label: 'Alternative Media', items: data.pubAltMedia }
+            ];
+
+            document.getElementById('pub-category-tabs').innerHTML = tabDefs.map(t => {
+                const count = t.items.filter(itemPassesGlobalAoCFilter).length;
+                return `<button class="filter-btn ${currentPubTab === t.key ? 'active' : ''}"
+                            onclick="selectPubCategoryTab('${t.key}')">${esc(t.label)} (${count})</button>`;
+            }).join('');
+
+            const activeGroup = tabDefs.find(t => t.key === currentPubTab)?.items || data.allPublications;
+            renderEntryList('list-pubs', 'badge-pubs-count', activeGroup);
+        }
+
+        function selectPubCategoryTab(key) {
+            currentPubTab = key;
+            renderPublicationsSection(PARSED);
+            setTimeout(applyCustomTextHighlights, 20);
+        }
+
+        function renderDiagnostics(data) {
+            const d = data.diagnostics;
+            const vals = [
+                ['App Version', APP_VERSION],
+                ['Parser', d.parserUsed],
+                ['Score', `${d.score}/100`],
+                ['Faculty Name', data.name],
+                ['Faculty Start Year', data.facultyStartYear],
+                ['Teaching Entries', data.teaching.length],
+                ['Invited Talks', data.lectures.length],
+                ['Committees', data.committees.length],
+                ['Total Publications', data.allPublications.length],
+                ['↳ All Peer-Reviewed', data.pubAllPeerReviewed.length],
+                ['↳ Book Chapters', data.pubBookChapters.length],
+                ['↳ Review Articles', data.pubReviewArticles.length],
+                ['↳ Editorials', data.pubEditorials.length],
+                ['↳ Alternative Media', data.pubAltMedia.length],
+                ['Posters / Abstracts', data.abstracts.length],
+                ['Hospital / Admin Roles', data.hospitalAppointments.length],
+                ['Awards & Honors', data.awards.length],
+                ['Society Memberships', data.memberships.length]
+            ];
+            let html = '<div class="diag-grid">' + vals.map(c => `<div class="diag-pill"><b>${esc(c[0])}</b>${esc(c[1])}</div>`).join('') + '</div>';
+            if (d.warnings.length) html += `<div class="error-msg warning visible">${esc(d.warnings.join('\n'))}</div>`;
+            if (d.sectionsMissing.length) html += `<p class="help-text"><b>Expected AC sections not detected:</b> ${esc(d.sectionsMissing.join(', '))}</p>`;
+            html += `<p class="help-text"><b>Detected section headers:</b> ${esc(d.sectionsDetected.join(' · '))}</p>`;
+            document.getElementById('diagnostics').innerHTML = html;
+            document.getElementById('raw-preview').textContent = d.rawTextPreview;
+        }
+
+        // ==================== REALISTIC PENN AC EXAMPLE CV ====================
+        function getExampleRTF() {
+            return `{\\rtf1\\ansi\\ansicpg1252
+Curriculum Vitae\\par
+Sanjiv D. Mehta, MD, MBE, MSCE\\par
+Faculty Appointments:\\par
+2023-present Assistant Professor of Clinical Anesthesiology and Critical Care (Academic Clinician Track), Perelman School of Medicine at the University of Pennsylvania\\par
+Hospital and/or Administrative Appointments:\\par
+2023-present Medical Co-Director, Pediatric Rapid Response & Clinical Deterioration Program, Children's Hospital of Philadelphia\\par
+2024-present Quality & Patient Safety Lead, Division of Pediatric Critical Care Medicine, CHOP\\par
+2023-present Attending Physician, Pediatric Intensive Care Unit, Children's Hospital of Philadelphia\\par
+Awards, Honors and Membership in Honorary Societies:\\par
+2025 Fellow Teaching Award, Division of Pediatric Critical Care Medicine, CHOP\\par
+2025 Early Career Faculty Honor Roll, Children's Hospital of Philadelphia\\par
+2024 National Academy of Medicine Scholar in Diagnostic Excellence\\par
+2023 Critical Care Division Quality & Innovation Award, CHOP\\par
+Memberships in Professional and Scientific Societies and Other Professional Activities:\\par
+National:\\par
+2019-present Society of Critical Care Medicine (SCCM) (Pediatric Quality & Safety Committee, 2023-present)\\par
+2020-present American Academy of Pediatrics (AAP), Section on Critical Care\\par
+2022-present Pediatric Acute Lung Injury and Sepsis Investigators (PALISI) Network\\par
+2023-present Society to Improve Diagnosis in Medicine (SIDM)\\par
+Academic and Institutional Committees:\\par
+2023-present Co-Chair, Hospital-Wide Clinical Deterioration & Code Blue Review Committee, CHOP\\par
+2023-present Member, PICU Quality Improvement and Patient Safety Steering Committee, CHOP\\par
+2024-present Member, Pediatric Residency Simulation & Acute Care Curriculum Committee, CHOP\\par
+2024-present Member, Enterprise Sepsis & Early Warning System Governance Council, CHOP\\par
+2025-present Faculty Advisor, PSOM Measey Medical Education Pathway, University of Pennsylvania\\par
+Major Academic and Clinical Teaching Responsibilities:\\par
+2023-present PICU Bedside Attending Teaching (16 weeks/year; PICU Fellows, Pediatric Residents, PSOM Medical Students)\\par
+2023-present Course Co-Director, Pediatric Critical Care Fellow Boot Camp & High-Fidelity Simulation Series, CHOP\\par
+2023-present Faculty Preceptor, Multidisciplinary Rapid Response Team Interprofessional Simulation Training\\par
+2024-present Core Lecture Series Instructor, "Recognition and Rescue of the Deteriorating Child", CHOP Pediatric Residency\\par
+2024-present Longitudinal Faculty Mentor, PSOM Medical Student Quality & Safety Scholarly Concentration (3 mentees)\\par
+2025-present Small Group Facilitator, Diagnostic Reasoning & Patient Safety Workshop, Perelman School of Medicine\\par
+Lectures by Invitation:\\par
+National:\\par
+Jan, 2024 "Proactive Identification of Clinical Deterioration Outside the ICU", Society of Critical Care Medicine (SCCM) Congress, Phoenix, AZ\\par
+Jan, 2025 "Machine Learning and Bedside Gut Instinct in Pediatric Rapid Response", SCCM Critical Care Congress, Orlando, FL\\par
+May, 2025 "Building System Intelligence to Prevent In-Hospital Cardiac Arrest", Boston Children's Hospital / CHOP Joint Quality Symposium\\par
+Jun, 2025 "Diagnostic Excellence in Acute Pediatric Deterioration", National Academy of Medicine Symposium, Washington, DC\\par
+Regional:\\par
+Nov, 2023 "Who Ya Gonna Call? Optimizing Critical Care Outreach Teams", Beatrice Nicoletti Resuscitation Science Conference, Philadelphia, PA\\par
+Apr, 2024 "Simulation-Based Team Training for Code Blue Readiness", Mid-Atlantic Pediatric Critical Care Consortium, Baltimore, MD\\par
+Research Publications, peer reviewed (print or other media):\\par
+1. Mehta SD, Galligan M, Nishisaki A: Proactive critical care outreach team enhances early recognition of clinical deterioration on pediatric wards. Pediatric Critical Care Medicine 25(2): 112-120, February 2024.\\par
+2. Mehta SD, Conlon TW, Glau CL: Bedside ultrasound and rapid response team escalation in pediatric sepsis. Critical Care Medicine 52(6): 801-809, June 2024.\\par
+3. Balcarcel D, Mehta SD, Yehya N: Predictive clinical pathway for non-escalation in severe pediatric bronchiolitis. Pediatric Quality & Safety 10(1): e710, January 2025.\\par
+4. Mehta SD, Nadkarni VM: Pre-arrest vital sign trajectories and survival after pediatric in-hospital cardiac arrest. Resuscitation 198: 110204, May 2025.\\par
+Research Publications, peer-reviewed reviews:\\par
+1. Mehta SD, Srinivasan V: State-of-the-art review: Early warning scores and clinical deterioration response systems in hospitalized children. Pediatric Clinics of North America 71(4): 655-672, August 2024.\\par
+Editorials, Reviews, Chapters, including participation in committee reports (print or other media):\\par
+1. Mehta SD, Nishisaki A: Simulation and interprofessional team training in pediatric resuscitation. In: Rogers' Textbook of Pediatric Intensive Care, 6th Edition. Wolters Kluwer, Eds. Shaffner DH, Nichols DG, pp. 310-325, March 2024.\\par
+2. Mehta SD: Invited Commentary: Bridging the gap between artificial intelligence alerts and bedside clinical judgment. Pediatric Critical Care Medicine 25(9): 845-847, September 2024.\\par
+3. Mehta SD, Galligan M: Rapid response systems and patient safety metrics in children's hospitals. In: Comprehensive Pediatric Hospital Medicine, 3rd Edition. Elsevier, pp. 142-156, February 2025.\\par
+4. Mehta SD: Editorial: Diagnostic excellence as a core pillar of ICU quality improvement. Critical Care Medicine 53(4): 512-514, April 2025.\\par
+Alternative Media:\\par
+1. Mehta SD, Galligan M: CHOP Enterprise Clinical Pathway: Recognition and Escalation of Inpatient Clinical Deterioration (Electronic Health Record Decision Support & Web Pathway), October 2023.\\par
+2. Mehta SD: Podcast Episode: "Diagnostic Safety and Rapid Response in the PICU", PediCrit / WFPICCS Educational Podcast Series, May 2025.\\par
+Abstracts:\\par
+1. Mehta SD, Galligan M: Evaluation of clinician gut instinct for children at risk for deterioration. Critical Care Medicine 52(1): S422, January 2024.\\par
+2. Mehta SD, Galligan M: Proactive critical care outreach team reduces ward cardiac arrests. Critical Care Medicine 52(1): S425, January 2024.\\par
+3. Hyde E, Mehta SD, Nishisaki A: Simulation-based capnography feedback improves bag-mask ventilation quality among pediatric residents. Critical Care Medicine 53(1): S118, January 2025.\\par
+4. Hunter RB, Mehta SD: Family engagement in pediatric rapid response activations: A quality improvement initiative. Pediatric Academic Societies (PAS) Annual Meeting, May 2025.\\par
+}`;
+        }
+
+        // ==================== UPLOAD HANDLERS ====================
+        let uploadedCVs = [], selectedCVIndex = -1;
+
+        document.getElementById('dropzone').addEventListener('dragover', e => {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        });
+        document.getElementById('dropzone').addEventListener('dragleave', e => {
+            e.currentTarget.classList.remove('dragover');
+        });
+        document.getElementById('dropzone').addEventListener('drop', e => {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+        });
+        document.getElementById('file-input').addEventListener('change', e => {
+            if (e.target.files.length) handleFiles(e.target.files);
+        });
+
+        function handleFiles(fileList) {
+            for (const file of fileList) {
+                if (!file.name.toLowerCase().endsWith('.rtf')) {
+                    showError(`Skipped "${file.name}" — only .rtf files are supported.`);
+                    continue;
+                }
+                if (uploadedCVs.some(cv => cv.name === file.name)) continue;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    uploadedCVs.push({ name: file.name, content: reader.result });
+                    selectedCVIndex = uploadedCVs.length - 1;
+                    renderCVSelector();
+                    document.getElementById('btn-generate').disabled = false;
+                    hideError();
+                };
+                reader.readAsText(file, 'windows-1252');
+            }
+        }
+
+        function renderCVSelector() {
+            const area = document.getElementById('cv-selector-area');
+            const list = document.getElementById('cv-file-list');
+            if (!uploadedCVs.length) {
+                area.style.display = 'none';
+                return;
+            }
+            area.style.display = 'block';
+            list.innerHTML = uploadedCVs.map((cv, i) => `
+                <li class="cv-file-item ${i === selectedCVIndex ? 'selected' : ''}" onclick="selectCV(${i})">
+                    <span class="file-name">📎 ${esc(cv.name)}</span>
+                    <button class="remove-btn" onclick="event.stopPropagation(); removeCV(${i})" title="Remove">✕</button>
+                </li>
+            `).join('');
+        }
+
+        function selectCV(index) {
+            selectedCVIndex = index;
+            renderCVSelector();
+        }
+
+        function removeCV(index) {
+            uploadedCVs.splice(index, 1);
+            if (selectedCVIndex >= uploadedCVs.length) selectedCVIndex = uploadedCVs.length - 1;
+            renderCVSelector();
+            if (!uploadedCVs.length) document.getElementById('btn-generate').disabled = true;
+        }
+
+        function generateDashboard() {
+            if (selectedCVIndex < 0 || selectedCVIndex >= uploadedCVs.length) {
+                showError('Please select a CV to review.');
+                return;
+            }
+            try {
+                yearMode = document.getElementById('year-mode').value || 'fy';
+                spanMode = document.getElementById('span-mode').value || 'active';
+                const facYear = parseInt(document.getElementById('faculty-year').value, 10) || null;
+                manualAoCPins = {};
+                currentAoCFilter = 'all';
+                currentPubTab = 'all';
+                const data = parseRTF(uploadedCVs[selectedCVIndex].content, facYear);
+                if (data.diagnostics.warnings.length) showError(data.diagnostics.warnings.join('\n\n'), true);
+                else hideError();
+                renderDashboard(data);
+            } catch (err) {
+                showError('Error parsing RTF: ' + err.message);
+                console.error(err);
+            }
+        }
+
+        function loadExample() {
+            // Populate 3 realistic AoCs if empty so user can test v1 + v2 immediately
+            if (!document.getElementById('aoc-name-1').value.trim()) {
+                document.getElementById('aoc-name-1').value = 'Quality Improvement & Clinical Deterioration';
+                document.getElementById('aoc-kw-1').value = 'deterioration, rapid response, outreach, quality, safety, pathway, arrest, sepsis, diagnostic';
+            }
+            if (!document.getElementById('aoc-name-2').value.trim()) {
+                document.getElementById('aoc-name-2').value = 'Medical Education & Simulation';
+                document.getElementById('aoc-kw-2').value = 'simulation, boot camp, resident, fellow, curriculum, student, teaching, preceptor, workshop';
+            }
+            if (!document.getElementById('aoc-name-3').value.trim()) {
+                document.getElementById('aoc-name-3').value = 'Predictive Analytics & Decision Support';
+                document.getElementById('aoc-kw-3').value = 'predictive, machine learning, artificial intelligence, model, score, alert, electronic';
+            }
+            yearMode = document.getElementById('year-mode').value || 'fy';
+            spanMode = document.getElementById('span-mode').value || 'active';
+            manualAoCPins = {};
+            currentAoCFilter = 'all';
+            currentPubTab = 'all';
+            const data = parseRTF(getExampleRTF(), null);
+            renderDashboard(data);
+        }
+
+        function showUploadView() {
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('upload-view').style.display = 'flex';
+        }
+
+        function showError(msg, isWarning = false) {
+            const el = document.getElementById('error-msg');
+            el.textContent = msg;
+            el.classList.toggle('warning', isWarning);
+            el.classList.add('visible');
+        }
+
+        function hideError() {
+            document.getElementById('error-msg').classList.remove('visible', 'warning');
+        }
+
+        if (typeof Chart !== 'undefined') {
+            Chart.defaults.color = '#64748b';
+            Chart.defaults.borderColor = '#e2e8f0';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+        }
+    </script>
+</body>
+
+</html>
